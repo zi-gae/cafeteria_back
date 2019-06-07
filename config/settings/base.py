@@ -65,17 +65,19 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
     # "django.contrib.humanize", # Handy template tags
     "django.contrib.admin",
+    # django 와 함께 default 로 깔린 앱
 ]
 THIRD_PARTY_APPS = [
-    "crispy_forms",
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-    "rest_framework",
+    # 인터넷에서 설치한 앱
 ]
 LOCAL_APPS = [
     "instar.users.apps.UsersConfig",
     # Your stuff: custom apps go here
+    # ㄴㅐ가 생성한 앱
+    "instar.images.apps.ImagesConfig"
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
