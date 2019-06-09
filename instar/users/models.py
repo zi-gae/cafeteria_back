@@ -7,11 +7,13 @@ from django.utils.translation import ugettext_lazy as _
 
 class User(AbstractUser):
 
-    # First Name and Last Name do not cover name patterns
-    # around the globe.
-    name = CharField(_("Name of User"), blank=True, max_length=255)
-    stdntnum = models.IntegerField(blank=True)
-    bio = models.TextField(blank=True)
+    """ Users Models """
+    profile_image = models.ImageField(null=True, blank=True)
+    name = CharField(_("Name of User"), null=True, max_length=255, blank=True)
+    stdntnum = models.IntegerField(null=True)
+    bio = models.TextField(null=True)
+    followers = models.ManyToManyField("self", blank=True)
+    following = models.ManyToManyField("self", blank=True)
 
     def get_absolute_url(self):
         return reverse("users:detail", kwargs={"username": self.username})

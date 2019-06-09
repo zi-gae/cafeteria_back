@@ -71,6 +71,7 @@ THIRD_PARTY_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "rest_framework",
     # 인터넷에서 설치한 앱
 ]
 LOCAL_APPS = [
