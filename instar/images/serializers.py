@@ -3,6 +3,18 @@ from . import models
 from instar.users import models as user_models
 
 
+class UserProfileImageSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Image
+        fields = (
+            "id",
+            "file",
+            "like_count",
+            "comment_count"
+        )
+
+
 class FeedUserSerializer(serializers.ModelSerializer):
 
     class Meta:
