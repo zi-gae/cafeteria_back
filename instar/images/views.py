@@ -13,7 +13,7 @@ class Feed(APIView):
         image_list = []
         sorted_list = []
         for following_user in following_users:
-            user_images = following_user.images.all()[:2]
+            user_images = following_user.images.all()[:5]
             for image in user_images:
                 image_list.append(image)
 
@@ -98,3 +98,37 @@ class Comment(APIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
         except models.Comment.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+
+class TitleSearch(APIView):
+
+    def get(self, request, format=None):
+
+        try:
+            search = request.query_params.get("title", None)
+            # get 으로 넘어오는 값이 없으면 None
+
+        except ValueError:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        images = models.Image.objects.filter(title__icontains=search).distinct()
+        # contains => 포함하는 결과를 찾음
+        # icontains => 대소문자 구분 안함
+        # exact => === 하는걸 찾음
+        # distinct => distinct 2개 이상 키워드로 검색 했을때 결과 중복 제거
+        serializer = serializers.ImageSerializer(images, many=True)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+class ContentSearch(APIView):
+
+    def get(self, request, format=None):
+
+        search = request.query_params.get("content", None)
+
+        if search is not None:
+            images = models.Image.objects.filter(content__icontains=search).distinct()
+            serializer = serializers.ImageSerializer(images, many=True)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)

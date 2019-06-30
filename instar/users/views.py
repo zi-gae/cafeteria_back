@@ -26,8 +26,10 @@ class FollowUser(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         user.following.add(user_to_follow)
+        user_to_follow.followers.add(user)
 
         user.save()
+        user_to_follow.save()
 
         return Response(status=status.HTTP_200_OK)
 
@@ -44,8 +46,10 @@ class UnFollowUser(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         user.following.remove(user_to_follow)
+        user_to_follow.followers.remove(user)
 
         user.save()
+        user_to_follow.save()
 
         return Response(status=status.HTTP_200_OK)
 
