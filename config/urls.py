@@ -15,6 +15,7 @@ urlpatterns = [
     # User management
     path("users/", include("instar.users.urls", namespace="users")),
     path("images/", include("instar.images.urls", namespace="images")),
+    path("notifications/", include("instar.notifications.urls", namespace="notifications")),
     path("accounts/", include("allauth.urls")),
     # Your stuff: custom urls includes go here
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

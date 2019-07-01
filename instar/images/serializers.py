@@ -3,6 +3,15 @@ from . import models
 from instar.users import models as user_models
 
 
+class SmallImageSerializer(serializers.ModelSerializer):
+    # notification for serializer
+    class Meta:
+        model = models.Image
+        fields = (
+            "file",
+        )
+
+
 class UserProfileImageSerializer(serializers.ModelSerializer):
 
     class Meta:
