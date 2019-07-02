@@ -3,4 +3,7 @@
 with Django & React
 
 
--[x] User api 
+- [x] User api 
+- [x] follow
+- [x] following
+- [ ] notification
