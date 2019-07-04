@@ -2,6 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from . import models, serializers
+from instar.notifications import views as notification_view
 
 
 class ExploreUser(APIView):
@@ -24,6 +25,8 @@ class FollowUser(APIView):
             user_to_follow = models.User.objects.get(id=user_id)
         except models.User.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
+
+        create_notification = notification_view.create_notification(user, user_to_follow, "follow")
 
         user.following.add(user_to_follow)
         user_to_follow.followers.add(user)
