@@ -107,6 +107,10 @@ class Comment(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 
+# todo list
+# 1.게시글에 달린 댓글 삭제 (작성자)
+#
+
 # 타이틀 검색
 class TitleSearch(APIView):
 
