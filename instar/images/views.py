@@ -43,7 +43,7 @@ class LikeImage(APIView):
 
         except models.Like.DoesNotExist:
 
-            create_notification = notification_view.create_notification(user, found_image.creator, "like")
+            create_notification = notification_view.create_notification(user, found_image.creator, "like", found_image)
             new_like = models.Like.objects.create(
                 creator=user,
                 image=found_image
@@ -53,6 +53,7 @@ class LikeImage(APIView):
             return Response(status=status.HTTP_201_CREATED)
 
 
+# 좋아요 취소
 class UnLikeImage(APIView):
     def delete(self, request, image_id, format=None):
         user = request.user
@@ -72,6 +73,7 @@ class UnLikeImage(APIView):
             return Response(status=status.HTTP_201_CREATED)
 
 
+# 이미지에 댓글 달기
 class CommentOnImage(APIView):
 
     def post(self, request, image_id, format=None):
@@ -85,11 +87,14 @@ class CommentOnImage(APIView):
         user = request.user
         if serializer.is_valid():
             serializer.save(creator=user, image=found_image)
+            notification = notification_view.create_notification(
+                user, found_image.creator, "comment", found_image, serializer.data["message"])
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+# 이미지에 댓글 삭제
 class Comment(APIView):
 
     def delete(self, request, comment_id, format=None):
@@ -102,6 +107,7 @@ class Comment(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 
+# 타이틀 검색
 class TitleSearch(APIView):
 
     def get(self, request, format=None):
@@ -121,6 +127,7 @@ class TitleSearch(APIView):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
+# 내용 검색
 class ContentSearch(APIView):
 
     def get(self, request, format=None):
