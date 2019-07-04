@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from . import models
 from . import serializers
+from instar.notifications import views as notification_view
 
 
 class Feed(APIView):
@@ -42,6 +43,7 @@ class LikeImage(APIView):
 
         except models.Like.DoesNotExist:
 
+            create_notification = notification_view.create_notification(user, found_image.creator, "like")
             new_like = models.Like.objects.create(
                 creator=user,
                 image=found_image
