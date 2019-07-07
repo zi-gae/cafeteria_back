@@ -7,3 +7,4 @@ with Django & React
 - [x] follow
 - [x] following
 - [x] notification
+- [ ] my image on comment delete

@@ -12,6 +12,12 @@ urlpatterns = [
     path("content_search/", views.ContentSearch.as_view(), name="content_search")
 ]
 
+my image on comment delete
+
+3/comment/5
+image-id: 3
+delete commentId: 5
+
 
 # step0 url view 만들기
 # step2 url 에서 아이디 가져오기
