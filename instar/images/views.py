@@ -18,6 +18,10 @@ class Feed(APIView):
             for image in user_images:
                 image_list.append(image)
 
+        my_images = user.images.all()
+        for images in my_images:
+            image_list.append(images)
+
         sorted_list = sorted(image_list, key=lambda image: image.created_at, reverse=True)
         serializer = serializers.ImageSerializer(sorted_list, many=True)
         return Response(serializer.data)
@@ -107,11 +111,19 @@ class Comment(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 
-# todo list
-# 1.게시글에 달린 댓글 삭제 (작성자)
-#
+# 내 게시글에 달린 댓글 삭제
+class ModerateComment(APIView):
 
-# 타이틀 검색
+    def delete(self, request, image_id, comment_id, format=None):
+        try:
+            user = request.user
+            found_comment = models.Comment.objects.get(id=comment_id, image__id=image_id, image__creator=user)
+            found_comment.delete()
+            return Response(status.HTTP_204_NO_CONTENT)
+        except models.Comment.DoesNotExist:
+            return Response(status.HTTP_404_NOT_FOUND)
+
+
 class TitleSearch(APIView):
 
     def get(self, request, format=None):
