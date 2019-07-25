@@ -157,3 +157,20 @@ class ContentSearch(APIView):
 
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
+# 이미지 디테일
+
+
+class ImageDetail(APIView):
+
+    def get(self, request, image_id, format=None):
+
+        user = request.user
+
+        try:
+            image = models.Image.objects.get(id=image_id, creator=user)
+        except models.Image.DoesNotExist:
+            return Response(status.HTTP_404_NOT_FOUND)
+
+        serializer = serializers.ImageSerializer(image)
+        return Response(serializer.data)
