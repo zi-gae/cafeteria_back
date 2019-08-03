@@ -13,7 +13,7 @@ class SmallImageSerializer(serializers.ModelSerializer):
 
 
 class UserProfileImageSerializer(serializers.ModelSerializer):
-
+    # user profile for serializer
     class Meta:
         model = models.Image
         fields = (
