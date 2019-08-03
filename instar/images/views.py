@@ -4,6 +4,8 @@ from rest_framework import status
 from . import models
 from . import serializers
 from instar.notifications import views as notification_view
+from instar.users import models as user_models
+from instar.users import serializers as user_serializers
 
 
 class Feed(APIView):
@@ -29,6 +31,17 @@ class Feed(APIView):
 
 # 좋아요 url 눌렀을때 view
 class LikeImage(APIView):
+
+    def get(self, request, image_id, format=None):
+
+        like = models.Like.objects.filter(image__id=image_id)
+        like_creator_ids = like.values('creator_id')
+        users = user_models.User.objects.filter(id__in=like_creator_ids)
+        # id__in => id 는 기본적으로 가지고 있고 __in => 주어진 리스트안에 존재하는 자료 검색
+
+        serializer = user_serializers.ListUserSerializer(users, many=True)
+
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, image_id, format=None):
 
