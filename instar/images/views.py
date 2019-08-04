@@ -181,9 +181,28 @@ class ImageDetail(APIView):
         user = request.user
 
         try:
-            image = models.Image.objects.get(id=image_id, creator=user)
+            image = models.Image.objects.get(id=image_id)
         except models.Image.DoesNotExist:
             return Response(status.HTTP_404_NOT_FOUND)
 
         serializer = serializers.ImageSerializer(image)
         return Response(serializer.data)
+
+    def put(self, request, image_id, format=None):
+
+        user = request.user
+
+        try:
+            image = models.Image.objects.get(id=image_id, creator=user)
+
+        except models.Image.DoesNnotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        serializer = serializers.InputImageSerializer(image, data=request.data, partial=True)
+        # partial => update 할때 require=True 이면 기존의 값을 이어 받음
+        # require 속성이 True 이고 값을 입력하지 않을때 partial 속성을 주지 않으면 serializer 가 제대로 동작 하지 않음
+        if serializer.is_valid():
+            serializer.save()
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
