@@ -19,13 +19,13 @@ class User(AbstractUser):
         return self.username
 
     @property
-    def post_count(self):
+    def postCount(self):
         return self.images.all().count()
 
     @property
-    def followers_count(self):
+    def followersCount(self):
         return self.followers.all().count()
 
     @property
-    def following_count(self):
+    def followingCount(self):
         return self.following.all().count()
