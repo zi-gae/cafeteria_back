@@ -88,3 +88,28 @@ class UserProfile(APIView):
 
         elif user != foundUser:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+class ChangePassword(APIView):
+
+    def put(self, request, username, format=None):
+
+        user = request.user
+
+        if user.username == username:
+            print("test1")
+            currentPassword = request.data.get('currentPassword', None)
+            match = user.check_password(currentPassword)
+            if match and currentPassword is not None:
+                print("test2")
+                newPassword = request.data.get('newPassword', None)
+                if newPassword is not None:
+                    print("test3")
+                    user.set_password(newPassword)
+                    return Response(status=status.HTTP_200_OK)
+                else:
+                    return Response(status=status.HTTP_400_BAD_REQUEST)
+            else:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
