@@ -17,7 +17,7 @@ class Notifications(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-def create_notification(creator, to, notification_type, image=None, comment=None):
+def createNotification(creator, to, notification_type, image=None, comment=None):
 
     notification = models.Notification.objects.create(
         creator=creator,
