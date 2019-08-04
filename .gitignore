@@ -283,4 +283,8 @@ instar/media/
 
 .pytest_cache/
 
+instar/users/migrations/
+instar/notifications/migrations/
+instar/images/migrations/
+
 
