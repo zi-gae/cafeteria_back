@@ -12,20 +12,12 @@ class Feed(APIView):
 
     def get(self, request, format=None):
         user = request.user
-        followingUsers = user.following.all()
-        imageList = []
-        sortedList = []
-        for followingUser in followingUsers:
-            userImages = followingUser.images.all()[:5]
-            for image in userImages:
-                imageList.append(image)
-
-        my_images = user.images.all()
-        for images in my_images:
-            imageList.append(images)
-
-        sortedList = sorted(imageList, key=lambda image: image.created_at, reverse=True)
-        serializer = serializers.ImageSerializer(sortedList, many=True)
+        try:
+            user_models.User.objects.get(id=user.id)
+        except user_models.User.DoesNotExist:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        allImages = models.Image.objects.all().order_by('-created_at')
+        serializer = serializers.ImageSerializer(allImages, many=True)
         return Response(serializer.data)
 
 
@@ -171,9 +163,8 @@ class ContentSearch(APIView):
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
+
 # 이미지 디테일
-
-
 class ImageDetail(APIView):
 
     def findOwnImage(self, image_id, user):
