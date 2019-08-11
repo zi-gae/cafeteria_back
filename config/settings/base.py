@@ -5,8 +5,8 @@ import environ
 
 ROOT_DIR = (
     environ.Path(__file__) - 3
-)  # (instar/config/settings/base.py - 3 = instar/)
-APPS_DIR = ROOT_DIR.path("instar")
+)  # (cafeteria/config/settings/base.py - 3 = cafeteria/)
+APPS_DIR = ROOT_DIR.path("cafeteria")
 
 env = environ.Env()
 
@@ -75,17 +75,17 @@ THIRD_PARTY_APPS = [
 
 ]
 LOCAL_APPS = [
-    "instar.users.apps.UsersConfig",
+    "cafeteria.users.apps.UsersConfig",
     # Your stuff: custom apps go here
-    "instar.images.apps.ImagesConfig",
-    "instar.notifications.apps.NotificationsConfig"
+    "cafeteria.images.apps.ImagesConfig",
+    "cafeteria.notifications.apps.NotificationsConfig"
 ]
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 # MIGRATIONS
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#migration-modules
-MIGRATION_MODULES = {"sites": "instar.contrib.sites.migrations"}
+MIGRATION_MODULES = {"sites": "cafeteria.contrib.sites.migrations"}
 
 # AUTHENTICATION
 # ------------------------------------------------------------------------------
@@ -251,8 +251,8 @@ ACCOUNT_ALLOW_REGISTRATION = env.bool("DJANGO_ACCOUNT_ALLOW_REGISTRATION", True)
 ACCOUNT_AUTHENTICATION_METHOD = "username"
 ACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_EMAIL_VERIFICATION = "none"
-ACCOUNT_ADAPTER = "instar.users.adapters.AccountAdapter"
-SOCIALACCOUNT_ADAPTER = "instar.users.adapters.SocialAccountAdapter"
+ACCOUNT_ADAPTER = "cafeteria.users.adapters.AccountAdapter"
+SOCIALACCOUNT_ADAPTER = "cafeteria.users.adapters.SocialAccountAdapter"
 
 
 # Your stuff...
@@ -266,5 +266,5 @@ REST_FRAMEWORK = {
     ),
 }
 
-REST_USE_JWT = True
+#REST_USE_JWT = True
 ACCOUNT_LOGOUT_ON_GET = True
