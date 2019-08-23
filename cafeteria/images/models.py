@@ -21,7 +21,7 @@ class Image(TimeStampedModel):
 
     """ Image  conctent Model """
     # json 으로 변경
-    file = models.ImageField()
+    file = models.ImageField(blank=True, null=True)
     title = models.CharField(max_length=30)
     content = models.TextField(max_length=700)
     creator = models.ForeignKey(user_models.User, on_delete=models.PROTECT, null=True, related_name="images")

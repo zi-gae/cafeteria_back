@@ -18,6 +18,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "username",
             "name",
             "bio",
+            "profile_image",
             "stdntnum",
             "postCount",
             "followersCount",
@@ -32,7 +33,6 @@ class ListUserSerializer(serializers.ModelSerializer):
         model = models.User
         fields = (
             "id",
-            "profile_image",
             "username",
             "name"
         )

@@ -8,17 +8,30 @@ from cafeteria.users import models as user_models
 from cafeteria.users import serializers as userSerializers
 
 
-class Feed(APIView):
+class Images(APIView):
 
     def get(self, request, format=None):
         user = request.user
         try:
             user_models.User.objects.get(id=user.id)
         except user_models.User.DoesNotExist:
-            return Response(status=status.HTTP_401_UNAUTHORIZED)
+            return Response(data=serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
         allImages = models.Image.objects.all().order_by('-created_at')
         serializer = serializers.ImageSerializer(allImages, many=True)
         return Response(serializer.data)
+
+    def post(self, request, format=None):
+        user = request.user
+        try:
+            user_models.User.objects.get(id=user.id)
+        except user_models.User.DoesNotExist:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+        serializer = serializers.InputImageSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(creator=user)
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 # 좋아요 url 눌렀을때 view
