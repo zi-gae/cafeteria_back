@@ -9,5 +9,6 @@ urlpatterns = [
     path("<int:user_id>/unfollow/", view=views.UnFollowUser.as_view(), name="uflw_user"),
     path("<username>/", view=views.UserProfile.as_view(), name="user_propfile"),
     path("<username>/password/", view=views.ChangePassword.as_view(), name="password"),
+    path("login/kakao/", view=views.KakaoLogin.as_view(), name='kakao_login')
 
 ]

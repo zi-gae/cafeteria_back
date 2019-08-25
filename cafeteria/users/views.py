@@ -3,6 +3,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from . import models, serializers
 from cafeteria.notifications import views as notification_view
+from allauth.socialaccount.providers.kakao.views import KakaoOAuth2Adapter
+from rest_auth.registration.views import SocialLoginView
 
 
 class ExploreUser(APIView):
@@ -110,3 +112,7 @@ class ChangePassword(APIView):
                 return Response(status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+
+class KakaoLogin(SocialLoginView):
+    adapter_class = KakaoOAuth2Adapter

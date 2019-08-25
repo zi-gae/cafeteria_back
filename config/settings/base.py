@@ -70,6 +70,7 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount",
     "rest_framework",
     "rest_framework.authtoken",
+    "allauth.socialaccount.providers.kakao",
     "rest_auth",
     'rest_auth.registration',
 
