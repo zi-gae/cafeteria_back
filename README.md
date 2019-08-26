@@ -84,7 +84,7 @@
 
 **3. JWT Token 발행**
     
-> jwt 테스트를 위해 크롬앱 postman 설치 사용법은 [참조](https://meetup.toast.com/posts/107)
+> jwt 테스트를 위해 크롬앱 postman 설치 사용법은 [이곳](https://meetup.toast.com/posts/107)을 참조
 
     ```
     1. localhost:[hostnumber]/rest-auth/login/ // 주소 끝에 "/" 를 빼면 에러 발생 주의
@@ -97,6 +97,58 @@
     1. 복사한 토큰 헤더에 추가
     2. localhost:[hostnumber]/[myurl] 테스트 확인
    ```
+
+**5. Social Login for kakao (facebook, google)**
+> django allauth 이용. 자세한 내용은 [이곳](https://django-allauth.readthedocs.io/en/latest/installation.html)을 참조
+
+1) Django setting
+   - settings.py
+       ```
+       INSTALLED_APPS = (
+           # The following apps are required:
+           'django.contrib.auth',
+           'django.contrib.messages',
+           'django.contrib.sites',
+           'allauth',
+           'allauth.account',
+           'allauth.socialaccount',
+           
+           # ... include the providers you want to enable:
+           'allauth.socialaccount.providers.kakao',
+       )
+       ```
+   - urls.py
+       ```
+       urlpatterns = [
+           ...
+           path("login/kakao/", view=views.KakaoLogin.as_view(), name='kakao_login')
+           ...
+       ]
+       ```
+   > python manage.py makemigrations && python manage.py migrate
+   >> 모두 추가 후 해당 명령어 실행하여 migrate 해준다.
+
+    - django panel
+        ```
+        어드민 패널에서 소셜어플리케이션을 추가할때
+        카카오는 secret key (발급 받을 수는 있음) 가 없으므로 rest api 키를 secret key 값에 넣어준다(사실 아무거나 넣어도 무관..)
+        ```
+
+2) Kakao developer 
+    > 아래 순서를 따른다.
+    - https://developers.kakao.com/ 로그인
+    - 좌측 상단 앱 만들
+    - 아이콘 (선택), 앱 이름, 회사명 입력 후 생성
+    - 앱 설정 -> 사용자 관리 -> 로그인 Redirect URI 에 개발 서버 등록
+    - 카카오 REST API [도구](https://developers.kakao.com/docs/restapi/tool)를 이용해 임시토큰 생성
+    - 위에서 설정한 url (localhost:8000/login/kakao/) 으로 이동 후 생성한 임시토큰 값 전송
+
+> kakao 뿐만 아니라 소셜 로그인 대부분이 위와 같은 방법을 따른다.
+> 기회가 되면 타 소셜로그인 방법도 올릴 예정
+
+
+
+
 
 
 
