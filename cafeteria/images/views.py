@@ -37,6 +37,7 @@ class Images(APIView):
 # 좋아요 url 눌렀을때 view
 class LikeImage(APIView):
 
+    # 좋아요 리스트
     def get(self, request, image_id, format=None):
 
         like = models.Like.objects.filter(image__id=image_id)
@@ -48,6 +49,7 @@ class LikeImage(APIView):
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
+    # 좋아요 생성
     def post(self, request, image_id, format=None):
 
         user = request.user
@@ -95,7 +97,7 @@ class UnLikeImage(APIView):
             return Response(status=status.HTTP_201_CREATED)
 
 
-# 이미지에 댓글 달기
+# 게시글 댓글 달기
 class CommentOnImage(APIView):
 
     def post(self, request, image_id, format=None):
@@ -116,7 +118,27 @@ class CommentOnImage(APIView):
             return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# 이미지에 댓글 삭제
+# 대댓글
+class CommentOnComment(APIView):
+
+    def post(self, request, comment_id, format=None):
+        try:
+            foundComment = models.Comment.objects.get(id-comment_id)
+        except models.Comment.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        serializer = serializers.CommentSerializer(data=request.data)
+        user = request.user
+        if serializer.is_valid():
+            serializer.save(creator=user, image=foundImage)
+            notification = notificationView.createNotification(
+                user, foundImage.creator, "comment", foundImage, serializer.data["message"])
+            return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# 게시글 나의 댓글 삭제
 class Comment(APIView):
 
     def delete(self, request, comment_id, format=None):
@@ -180,13 +202,15 @@ class ContentSearch(APIView):
 # 이미지 디테일
 class ImageDetail(APIView):
 
+    # 게시글 존재 여부 확인
     def findOwnImage(self, image_id, user):
         try:
             image = models.Image.objects.get(id=image_id, creator=user)
             return image
         except models.Image.DoesNotExist:
-            return None
+            return Response(status.HTTP_404_NOT_FOUND)
 
+    # 게시글 상세 보기
     def get(self, request, image_id, format=None):
 
         user = request.user
@@ -199,6 +223,7 @@ class ImageDetail(APIView):
         serializer = serializers.ImageSerializer(image)
         return Response(serializer.data)
 
+    # 게시글 수정
     def put(self, request, image_id, format=None):
 
         user = request.user
@@ -214,6 +239,7 @@ class ImageDetail(APIView):
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
+    # 게시글 삭제
     def delete(self, request, image_id, format=None):
 
         user = request.user

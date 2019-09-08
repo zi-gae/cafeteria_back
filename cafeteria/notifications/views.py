@@ -6,6 +6,7 @@ from . import models, serializers
 
 class Notifications(APIView):
 
+    # 알림 리스트
     def get(self, request, format=None):
 
         user = request.user
@@ -17,6 +18,7 @@ class Notifications(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+# 알림 생성
 def createNotification(creator, to, notification_type, image=None, comment=None):
 
     notification = models.Notification.objects.create(

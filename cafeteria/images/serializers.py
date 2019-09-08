@@ -43,7 +43,8 @@ class CommentSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "message",
-            "creator"
+            "creator",
+            "referComment"
         )
 
 
@@ -64,6 +65,7 @@ class ImageSerializer(serializers.ModelSerializer):
         model = models.Image
         fields = (
             'id',
+            'title',
             'file',
             'content',
             'creator',

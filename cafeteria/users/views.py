@@ -68,6 +68,7 @@ class UserProfile(APIView):
         except models.User.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
+    # 유저 프로필 보기
     def get(self, request, username, format=None):
 
         foundUser = self.getUser(username)
@@ -76,6 +77,7 @@ class UserProfile(APIView):
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
+    # 유저 프로필 수정
     def put(self, request, username, format=None):
         user = request.user
         foundUser = self.getUser(username)
@@ -94,10 +96,10 @@ class UserProfile(APIView):
 
 class ChangePassword(APIView):
 
+    # 패스워드 변경
     def put(self, request, username, format=None):
 
         user = request.user
-        print("changePassword")
         if user.username == username:
             currentPassword = request.data.get('currentPassword', None)
             match = user.check_password(currentPassword)

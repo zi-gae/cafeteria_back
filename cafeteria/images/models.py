@@ -24,7 +24,7 @@ class Image(TimeStampedModel):
     file = models.ImageField(blank=True, null=True)
     title = models.CharField(max_length=30)
     content = models.TextField(max_length=700)
-    creator = models.ForeignKey(user_models.User, on_delete=models.PROTECT, null=True, related_name="images")
+    creator = models.ForeignKey(user_models.User, on_delete=models.PROTECT, related_name="images")
 
     @property
     def like_count(self):
@@ -45,6 +45,7 @@ class Comment(TimeStampedModel):
     message = models.TextField(max_length=150)
     creator = models.ForeignKey(user_models.User, on_delete=models.PROTECT, null=True)
     image = models.ForeignKey(Image, on_delete=models.PROTECT, null=True, related_name='comments')
+    referComment = models.ForeignKey("self", on_delete=models.PROTECT, related_name='commentOnComment')
 
     def __str__(self):
         return 'msg: {}'.format(self.message)
@@ -55,7 +56,7 @@ class Like(TimeStampedModel):
 
     """ Like Model """
     creator = models.ForeignKey(user_models.User, on_delete=models.PROTECT, null=True)
-    image = models.ForeignKey(Image, on_delete=models.PROTECT, null=True, related_name='likes')
+    image = models.ForeignKey(Image, on_delete=models.SET_NULL, null=True, related_name='likes')
 
     def __str__(self):
         return 'user:{} - image:{}'.format(self.creator.username, self.image.content)
