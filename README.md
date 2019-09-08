@@ -146,6 +146,28 @@
 > kakao 뿐만 아니라 소셜 로그인 대부분이 위와 같은 방법을 따른다.
 > 기회가 되면 타 소셜로그인 방법도 올릴 예정
 
+## django React block 설정 해제
+
+1. proxy the request from 3000 to 8000
+    > proxy 를 :3000 에서 :8000으로 보냄
+2. install django-cors-headers
+    > django-cors-headers 설치
+3. Add 'corsheaders' to INSTALL_APPS
+    > INSTALL_APPS 에 'corsheaders' 추가
+4. Add 'corsheaders.middleware.CoreMiddleware' before 'CommonnMiddleware'
+    > CommonnMiddleware' 앞에 'corsheaders.middleware.CoreMiddleware'를 추가
+5. Add CORS_ORIGIN_ALLOW_ALL = True on base settings
+    > base setting 에 CORS_ORIGIN_ALLOW_ALL = True 추가
+6. Make Djagno load the bunndles as static files with 'str(ROOT_DIR.path('fronted','build','static'))'
+    > Djagno 에서 'str (ROOT_DIR.path ('fronted ','build ','static '))'을 사용하여 번들을 static 파일로로드
+7. Create a views.py file on 'cafeteria' folder
+    > cafeteria 폴더에 view 추가
+8. Create ReactAppView that reads the file.
+    > ReactAppView 작성
+9.  Add the ReactAppView as a URL
+    > ReactAppView를 URL로 추가
+
+
 
 
 
