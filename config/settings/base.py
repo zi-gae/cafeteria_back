@@ -10,6 +10,7 @@ APPS_DIR = ROOT_DIR.path("cafeteria")
 
 env = environ.Env()
 
+
 READ_DOT_ENV_FILE = env.bool("DJANGO_READ_DOT_ENV_FILE", default=False)
 if READ_DOT_ENV_FILE:
     # OS environment variables take precedence over variables from .env
@@ -73,6 +74,7 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount.providers.kakao",
     "rest_auth",
     'rest_auth.registration',
+    'corsheaders',  # 리액트에 연결 위함
 
 ]
 LOCAL_APPS = [
@@ -100,7 +102,7 @@ AUTH_USER_MODEL = "users.User"
 # https://docs.djangoproject.com/en/dev/ref/settings/#login-redirect-url
 
 # PASSWORDS
-# ------------------------------------------------------------------------------
+# ----------------------------------f--------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#password-hashers
 PASSWORD_HASHERS = [
     # https://docs.djangoproject.com/en/dev/topics/auth/passwords/#using-argon2-with-django
@@ -126,6 +128,7 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.locale.LocaleMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -140,7 +143,10 @@ STATIC_ROOT = str(ROOT_DIR("staticfiles"))
 # https://docs.djangoproject.com/en/dev/ref/settings/#static-url
 STATIC_URL = "/static/"
 # https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#std:setting-STATICFILES_DIRS
-STATICFILES_DIRS = [str(APPS_DIR.path("static"))]
+STATICFILES_DIRS = [
+    str(APPS_DIR.path("static")),
+    str("/Users/user/Documents/git_repo/cafeteria_front/build/static/"),
+]
 # https://docs.djangoproject.com/en/dev/ref/contrib/staticfiles/#staticfiles-finders
 STATICFILES_FINDERS = [
     "django.contrib.staticfiles.finders.FileSystemFinder",
@@ -258,6 +264,7 @@ SOCIALACCOUNT_ADAPTER = "cafeteria.users.adapters.SocialAccountAdapter"
 
 # Your stuff...
 # ------------------------------------------------------------------------------
+
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -267,5 +274,6 @@ REST_FRAMEWORK = {
     ),
 }
 
-REST_USE_JWT = True
-#ACCOUNT_LOGOUT_ON_GET = True
+REST_USE_JWT = True  # jwt 사용
+ACCOUNT_LOGOUT_ON_GET = True  # rest-auth get 으로 로그아웃 허용
+CORS_ORIGIN_ALLOW_ALL을 = True  # 모든 호스트 허용

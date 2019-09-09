@@ -45,7 +45,8 @@ class Comment(TimeStampedModel):
     message = models.TextField(max_length=150)
     creator = models.ForeignKey(user_models.User, on_delete=models.PROTECT, null=True)
     image = models.ForeignKey(Image, on_delete=models.PROTECT, null=True, related_name='comments')
-    referComment = models.ForeignKey("self", on_delete=models.PROTECT, related_name='commentOnComment')
+    referComment = models.ForeignKey("self", on_delete=models.PROTECT,
+                                     null=True, blank=True, related_name='commentOnComment')
 
     def __str__(self):
         return 'msg: {}'.format(self.message)

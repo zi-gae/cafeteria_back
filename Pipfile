@@ -38,6 +38,7 @@ Sphinx = "==2.0.1"
 django_coverage_plugin = "==1.6.0"
 djangorestframework-jwt = "*"
 django-rest-auth = "*"
+django-cors-headers = "*"
 
 [requires]
 python_version = "3.7"
