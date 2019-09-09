@@ -146,26 +146,94 @@
 > kakao 뿐만 아니라 소셜 로그인 대부분이 위와 같은 방법을 따른다.
 > 기회가 되면 타 소셜로그인 방법도 올릴 예정
 
-## django React block 설정 해제
+## Connecting django to React
 
-1. proxy the request from 3000 to 8000
-    > proxy 를 :3000 에서 :8000으로 보냄
-2. install django-cors-headers
-    > django-cors-headers 설치
-3. Add 'corsheaders' to INSTALL_APPS
-    > INSTALL_APPS 에 'corsheaders' 추가
-4. Add 'corsheaders.middleware.CoreMiddleware' before 'CommonnMiddleware'
-    > CommonnMiddleware' 앞에 'corsheaders.middleware.CoreMiddleware'를 추가
-5. Add CORS_ORIGIN_ALLOW_ALL = True on base settings
-    > base setting 에 CORS_ORIGIN_ALLOW_ALL = True 추가
-6. Make Djagno load the bunndles as static files with 'str(ROOT_DIR.path('fronted','build','static'))'
-    > Djagno 에서 'str (ROOT_DIR.path ('fronted ','build ','static '))'을 사용하여 번들을 static 파일로로드
-7. Create a views.py file on 'cafeteria' folder
-    > cafeteria 폴더에 view 추가
-8. Create ReactAppView that reads the file.
-    > ReactAppView 작성
-9.  Add the ReactAppView as a URL
-    > ReactAppView를 URL로 추가
+### 1. proxy the request from 3000 to 8000
+* proxy 를 :3000 에서 :8000으로 보냄 (react)
+### 2. install django-cors-headers
+* 보안상의 문제 없이 Ajax등의 통신을 하기 위해 사용되는 메커니즘이 CORS임
+  
+* Django 는 기본적으로 외부에서의 요청을 막음
+  
+* CORS 표준은 웹 브라우저가 사용하는 정보를 읽을 수 있도록 허가된 출처 집합를 서버에게 알려주도록 허용하는 HTTP 헤더를 추가함으로써 동작
+
+    > pip install django-cors-headers
+
+    [참조](http://recordingbetter.com/2017/08/07/Django-CORS)
+
+
+### 3. Add 'corsheaders' to INSTALL_APPS
+
+[참조](https://pypi.org/project/django-cors-headers/)
+
+```
+INSTALLED_APPS = [
+    ...,
+    INSTALLED_APPS,
+    ...
+]
+```
+### 4. Add 'corsheaders.middleware.CoreMiddleware' before 'CommonnMiddleware'
+```
+MIDDLEWARE = [
+    ...,
+    "corsheaders.middleware.CorsMiddleware",
+    "django.middleware.common.CommonMiddleware",
+    ...
+]
+```
+
+### 5. Add CORS_ORIGIN_ALLOW_ALL = True on base settings
+base.py or settings.py
+```
+...
+...
+CORS_ORIGIN_ALLOW_ALL을 = True
+```
+
+### 6. Make Djagno load the bunndles as static files with 'str(ROOT_DIR.path('fronted','build','static'))'
+django 가 번들을 static file (js, css...) 을 로딩하게 해야한다.
+
+base.py or settings.py
+```
+STATICFILES_DIRS = [
+    str(APPS_DIR.path("static")),
+    str("/Users/user/Documents/git_repo/cafeteria_front/build/static"),
+]
+```
+
+### 7. Create a views.py file on [root] folder
+views.py 생성
+### 8. Create ReactAppView that read the file.
+views.py 
+```
+import os
+from django.views.generic import View
+from django.http import HttpResponse
+from django.conf import settings
+
+
+class ReactAppView(View):
+
+    def get(self, request):
+        try:
+            with open(os.path.join("[path to react root folder]", "build", "index.html")) as file:
+                return HttpResponse(file.read())
+        except:
+            return HttpResponse(
+                """
+                index.html not found!! build your react app
+                """,
+                status=501
+            )
+
+```
+### 9.  Add the ReactAppView as a URL
+    urlpatterns = [
+        ...,
+        ...,
+        path("", views.ReactAppView.as_view()),
+    ]
 
 
 
