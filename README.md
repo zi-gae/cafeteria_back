@@ -32,24 +32,23 @@
 ## DB
  **1. Models**
     
-    ```
     User
     Image
     Comment
     Like
     Notification
-    ```
  **2. Command**
 
-    > python manage.py migrate
+> python manage.py migrate
 
-    > python manage.py makemigrations
+> python manage.py makemigrations
 
-        makimigrations 은 장고에서 제공하는 모델(models.py)의 변경사항들을 감지하고 기록하는 역할
+    makimigrations 은 장고에서 제공하는 모델(models.py)의 변경사항들을 감지하고 기록하는 역할
         
-        migrate 는 그러한 기록된 파일들과 설정값들을 읽어서 그 변경사항을 DB에 반영하는 역할을 한다.
-    > python manage.py migrate & python manage.py makemigrations
-    >> 위 처럼 두 명령어를 한 번에 실행 가능 for mac & linux
+    migrate 는 그러한 기록된 파일들과 설정값들을 읽어서 그 변경사항을 DB에 반영하는 역할을 한다.
+
+> python manage.py migrate & python manage.py makemigrations
+>> 위 처럼 두 명령어를 한 번에 실행 가능 for mac & linux
 
 
 ## Authentication
@@ -61,49 +60,49 @@
 
 **1. INSTALLED_APPS 에 추가**
 
-    ```
-    INSTALLED_APPS = (
-        ...,
-        'django.contrib.sites',
-        'allauth',
-        'allauth.account',
-        'rest_auth.registration',
-    )
-    ```
+```python
+INSTALLED_APPS = (
+    ...,
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'rest_auth.registration',
+)
+```
 **2. Cafeteria 의 urls.py 에 추가**
 
-    ```
-    urlpatterns = [
-        ...,
-        url(r'^rest-auth/', include('rest_auth.urls')), // rest_auth start
-        url(r'^rest-auth/registration/', include('rest_auth.registration.urls')) // rest_auth login url
-    ] 
-    ```
-    해당 url 추가 후 아래 명령어 실행
-    > python manage.py migrate
+```python
+urlpatterns = [
+    ...,
+    url(r'^rest-auth/', include('rest_auth.urls'), // rest_auth start
+    url(r'^rest-auth/registration/', includ('rest_auth.registration.urls')) // rest_authlogin url
+] 
+```
+해당 url 추가 후 아래 명령어 실행
+> python manage.py migrate
 
 **3. JWT Token 발행**
     
 > jwt 테스트를 위해 크롬앱 postman 설치 사용법은 [이곳](https://meetup.toast.com/posts/107)을 참조
 
-    ```
-    1. localhost:[hostnumber]/rest-auth/login/ // 주소 끝에 "/" 를 빼면 에러 발생 주의
-        - username, email, password (POST 값) 
-        - 발행 된 토큰 복사
-    ```
+```
+1. localhost:[hostnumber]/rest-auth/login/ // 주소끝에 "/" 를 빼면 에러 발생 주의
+    - username, email, password (POST 값) 
+    - 발행 된 토큰 복사
+```
 
 **4. JWT Token 인증**
-   ```
-    1. 복사한 토큰 헤더에 추가
-    2. localhost:[hostnumber]/[myurl] 테스트 확인
-   ```
+```
+ 1. 복사한 토큰 헤더에 추가
+ 2. localhost:[hostnumber]/[myurl] 테스트 확인
+```
 
 **5. Social Login for kakao (facebook, google)**
 > django allauth 이용. 자세한 내용은 [이곳](https://django-allauth.readthedocs.io/en/latest/installation.html)을 참조
 
 1) Django setting
    - settings.py
-       ```
+       ```python
        INSTALLED_APPS = (
            # The following apps are required:
            'django.contrib.auth',
@@ -118,7 +117,7 @@
        )
        ```
    - urls.py
-       ```
+       ```python
        urlpatterns = [
            ...
            path("login/kakao/", view=views.KakaoLogin.as_view(), name='kakao_login')
@@ -166,7 +165,7 @@
 
 [참조](https://pypi.org/project/django-cors-headers/)
 
-```
+```python
 INSTALLED_APPS = [
     ...,
     INSTALLED_APPS,
@@ -174,7 +173,7 @@ INSTALLED_APPS = [
 ]
 ```
 ### 4. Add 'corsheaders.middleware.CoreMiddleware' before 'CommonnMiddleware'
-```
+```python
 MIDDLEWARE = [
     ...,
     "corsheaders.middleware.CorsMiddleware",
@@ -185,8 +184,7 @@ MIDDLEWARE = [
 
 ### 5. Add CORS_ORIGIN_ALLOW_ALL = True on base settings
 base.py or settings.py
-```
-...
+```python
 ...
 CORS_ORIGIN_ALLOW_ALL을 = True
 ```
@@ -195,7 +193,7 @@ CORS_ORIGIN_ALLOW_ALL을 = True
 django 가 번들을 static file (js, css...) 을 로딩하게 해야한다.
 
 base.py or settings.py
-```
+```python
 STATICFILES_DIRS = [
     str(APPS_DIR.path("static")),
     str("/Users/user/Documents/git_repo/cafeteria_front/build/static"),
@@ -206,7 +204,7 @@ STATICFILES_DIRS = [
 views.py 생성
 ### 8. Create ReactAppView that read the file.
 views.py 
-```
+```python
 import os
 from django.views.generic import View
 from django.http import HttpResponse
@@ -229,11 +227,13 @@ class ReactAppView(View):
 
 ```
 ### 9.  Add the ReactAppView as a URL
-    urlpatterns = [
-        ...,
-        ...,
-        path("", views.ReactAppView.as_view()),
-    ]
+```python
+urlpatterns = [
+    ...,
+    ...,
+    path("", views.ReactAppView.as_view()),
+]
+```
 
 
 
