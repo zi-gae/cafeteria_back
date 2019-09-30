@@ -236,6 +236,14 @@ urlpatterns = [
 ```
 
 
+## Token 유효기간 연장(영구지속)
+```python
+JWT_AUTH = {
+'JWT+VERRIFY_EXPIRATION':False
+```
+
+
+
 
 
 
