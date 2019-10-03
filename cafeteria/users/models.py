@@ -10,7 +10,7 @@ class User(AbstractUser):
     """ Users Models """
     profile_image = models.ImageField(null=True, blank=True)
     name = CharField(_("Name of User"), null=True, max_length=255, blank=True)
-    stdntnum = models.IntegerField(null=True)
+    stdntnum = models.IntegerField(null=True, unique=True)
     bio = models.TextField(null=True)
     followers = models.ManyToManyField("self", blank=True)
     following = models.ManyToManyField("self", blank=True)

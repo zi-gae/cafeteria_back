@@ -38,9 +38,9 @@ class Images(APIView):
 class LikeImage(APIView):
 
     # 좋아요 리스트
-    def get(self, request, image_id, format=None):
+    def get(self, request, post_id, format=None):
 
-        like = models.Like.objects.filter(image__id=image_id)
+        like = models.Like.objects.filter(image__id=post_id)
         likeCreatorIds = like.values('creator_id')
         users = user_models.User.objects.filter(id__in=likeCreatorIds)
         # id__in => id 는 기본적으로 가지고 있고 __in => 주어진 리스트안에 존재하는 자료 검색
@@ -50,11 +50,11 @@ class LikeImage(APIView):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     # 좋아요 생성
-    def post(self, request, image_id, format=None):
+    def post(self, request, post_id, format=None):
 
         user = request.user
         try:
-            foundImage = models.Image.objects.get(id=image_id)
+            foundImage = models.Image.objects.get(id=post_id)
         except models.Image.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -79,10 +79,10 @@ class LikeImage(APIView):
 
 # 좋아요 취소
 class UnLikeImage(APIView):
-    def delete(self, request, image_id, format=None):
+    def delete(self, request, post_id, format=None):
         user = request.user
         try:
-            foundImage = models.Image.objects.get(id=image_id)
+            foundImage = models.Image.objects.get(id=post_id)
         except models.Image.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -100,10 +100,10 @@ class UnLikeImage(APIView):
 # 게시글 댓글 달기
 class CommentOnImage(APIView):
 
-    def post(self, request, image_id, format=None):
+    def post(self, request, post_id, format=None):
 
         try:
-            foundImage = models.Image.objects.get(id=image_id)
+            foundImage = models.Image.objects.get(id=post_id)
         except models.Image.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
@@ -154,10 +154,10 @@ class Comment(APIView):
 # 내 게시글에 달린 댓글 삭제
 class ModerateComment(APIView):
 
-    def delete(self, request, image_id, comment_id, format=None):
+    def delete(self, request, post_id, comment_id, format=None):
         try:
             user = request.user
-            foundComment = models.Comment.objects.get(id=comment_id, image__id=image_id, image__creator=user)
+            foundComment = models.Comment.objects.get(id=comment_id, image__id=post_id, image__creator=user)
             foundComment.delete()
             return Response(status.HTTP_204_NO_CONTENT)
         except models.Comment.DoesNotExist:
@@ -203,20 +203,20 @@ class ContentSearch(APIView):
 class ImageDetail(APIView):
 
     # 게시글 존재 여부 확인
-    def findOwnImage(self, image_id, user):
+    def findOwnImage(self, post_id, user):
         try:
-            image = models.Image.objects.get(id=image_id, creator=user)
+            image = models.Image.objects.get(id=post_id, creator=user)
             return image
         except models.Image.DoesNotExist:
             return Response(status.HTTP_404_NOT_FOUND)
 
     # 게시글 상세 보기
-    def get(self, request, image_id, format=None):
+    def get(self, request, post_id, format=None):
 
         user = request.user
 
         try:
-            image = models.Image.objects.get(id=image_id)
+            image = models.Image.objects.get(id=post_id)
         except models.Image.DoesNotExist:
             return Response(status.HTTP_404_NOT_FOUND)
 
@@ -224,11 +224,11 @@ class ImageDetail(APIView):
         return Response(serializer.data)
 
     # 게시글 수정
-    def put(self, request, image_id, format=None):
+    def put(self, request, post_id, format=None):
 
         user = request.user
 
-        image = self.findOwnImage(image_id, user)
+        image = self.findOwnImage(post_id, user)
 
         serializer = serializers.InputImageSerializer(image, data=request.data, partial=True)
         # partial => update 할때 require=True 이면 기존의 값을 이어 받음
@@ -240,10 +240,10 @@ class ImageDetail(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
     # 게시글 삭제
-    def delete(self, request, image_id, format=None):
+    def delete(self, request, post_id, format=None):
 
         user = request.user
-        image = self.findOwnImage(image_id, user)
+        image = self.findOwnImage(post_id, user)
 
         if image is None:
             return Response(status=status.HTTP_401_UNAUTHORIZED)

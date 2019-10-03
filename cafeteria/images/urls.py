@@ -1,15 +1,15 @@
 from django.urls import path
 from . import views
 
-app_name = "images"
+app_name = "posts"
 urlpatterns = [
     path("", views.Images.as_view(), name="feed"),
-    path("<int:image_id>", views.ImageDetail.as_view(), name="feed"),
-    path("<int:image_id>/like/", views.LikeImage.as_view(), name="like_image"),
-    path("<int:image_id>/unlike/", views.UnLikeImage.as_view(), name="like_image"),
-    path("<int:image_id>/comments/", views.CommentOnImage.as_view(), name="comment_image"),
+    path("<int:post_id>", views.ImageDetail.as_view(), name="feed"),
+    path("<int:post_id>/like/", views.LikeImage.as_view(), name="like_image"),
+    path("<int:post_id>/unlike/", views.UnLikeImage.as_view(), name="like_image"),
+    path("<int:post_id>/comments/", views.CommentOnImage.as_view(), name="comment_image"),
     path("<int:comment_id>/comments/", views.CommentOnComment.as_view(), name="comment_on_comment"),
-    path("<int:image_id>/comments/<int:comment_id>", views.ModerateComment.as_view(), name="comment_image"),
+    path("<int:post_id>/comments/<int:comment_id>", views.ModerateComment.as_view(), name="comment_image"),
     path("comments/<int:comment_id>/", views.Comment.as_view(), name="like_image"),
     path("title_search/", views.TitleSearch.as_view(), name="title_search"),
     path("content_search/", views.ContentSearch.as_view(), name="content_search")

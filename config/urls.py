@@ -14,7 +14,7 @@ urlpatterns = [
     path(settings.ADMIN_URL, admin.site.urls),
     # User management
     path("users/", include("cafeteria.users.urls", namespace="users")),
-    path("images/", include("cafeteria.images.urls", namespace="images")),
+    path("posts/", include("cafeteria.images.urls", namespace="images")),
     path("notifications/", include("cafeteria.notifications.urls", namespace="notifications")),
     path("accounts/", include("allauth.urls")),
     path("", views.ReactAppView.as_view())

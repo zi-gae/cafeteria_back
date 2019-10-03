@@ -258,12 +258,16 @@ ACCOUNT_ALLOW_REGISTRATION = env.bool("DJANGO_ACCOUNT_ALLOW_REGISTRATION", True)
 ACCOUNT_AUTHENTICATION_METHOD = "username"
 ACCOUNT_EMAIL_REQUIRED = False
 ACCOUNT_EMAIL_VERIFICATION = "none"
-ACCOUNT_ADAPTER = "cafeteria.users.adapters.AccountAdapter"
+ACCOUNT_ADAPTER = "cafeteria.users.adapters.CustomUserAccountAdapter"
 SOCIALACCOUNT_ADAPTER = "cafeteria.users.adapters.SocialAccountAdapter"
 
 
 # Your stuff...
 # ------------------------------------------------------------------------------
+
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'cafeteria.users.serializers.RegisterSerializer'
+}
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
