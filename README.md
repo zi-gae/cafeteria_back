@@ -242,6 +242,23 @@ JWT_AUTH = {
 'JWT+VERRIFY_EXPIRATION':False
 ```
 
+## view 에서 serializer 로 request 전달 법
+
+- view 에서 사용 할 serializer 에서
+```python
+MySerializer(object, context={'request': request})
+``` 
+- serializer 에서 list 추가
+```python
+my_list = serializers.SerializerMethodField()
+def get_my_list(self, obj):
+    # 함수 네이밍 규칙은 get_ + my_list 이고 필수 작성
+    # self.context 안에 위에서 전달한 request 가 담겨온다
+    # 여기서 return 한 값이 my_list 에 전달된다.
+```
+
+
+
 
 
 
