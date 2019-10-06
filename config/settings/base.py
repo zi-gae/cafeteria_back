@@ -278,6 +278,9 @@ REST_FRAMEWORK = {
     ),
 }
 
+JWT_AUTH = {
+    'JWT+VERRIFY_EXPIRATION': False
+}
 REST_USE_JWT = True  # jwt 사용
 ACCOUNT_LOGOUT_ON_GET = True  # rest-auth get 으로 로그아웃 허용
 CORS_ORIGIN_ALLOW_ALL을 = True  # 모든 호스트 허용

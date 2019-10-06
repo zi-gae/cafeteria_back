@@ -44,7 +44,9 @@ class CommentSerializer(serializers.ModelSerializer):
             "id",
             "message",
             "creator",
-            "referComment"
+            "referComment",
+            'natural_time',
+            'updated_at'
         )
 
 
@@ -60,6 +62,7 @@ class ImageSerializer(serializers.ModelSerializer):
     # foreign key 의 정보를 가져옴
     comments = CommentSerializer(many=True)
     creator = FeedUserSerializer()
+    is_liked = serializers.SerializerMethodField()
 
     class Meta:
         model = models.Image
@@ -71,9 +74,23 @@ class ImageSerializer(serializers.ModelSerializer):
             'creator',
             'comments',
             'like_count',
-            'created_at',
-            'updated_at'
+            'comment_count',
+            'natural_time',
+            'updated_at',
+            'is_liked'
         )
+
+    def get_is_liked(self, obj):
+        if 'request' in self.context:
+            request = self.context['request']
+            print("context: ", self.context)
+
+            try:
+                models.Like.objects.get(creator__id=request.user.id, image__id=obj.id)
+                return True
+            except models.Like.DoesNotExist:
+                return False
+        return False
 
 
 class InputImageSerializer(serializers.ModelSerializer):

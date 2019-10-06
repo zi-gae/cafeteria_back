@@ -17,7 +17,7 @@ class Images(APIView):
         except user_models.User.DoesNotExist:
             return Response(data=serializer.errors, status=status.HTTP_401_UNAUTHORIZED)
         allImages = models.Image.objects.all().order_by('-created_at')
-        serializer = serializers.ImageSerializer(allImages, many=True)
+        serializer = serializers.ImageSerializer(allImages, many=True, context={'request': request})
         return Response(serializer.data)
 
     def post(self, request, format=None):
@@ -220,7 +220,7 @@ class ImageDetail(APIView):
         except models.Image.DoesNotExist:
             return Response(status.HTTP_404_NOT_FOUND)
 
-        serializer = serializers.ImageSerializer(image)
+        serializer = serializers.ImageSerializer(image, context={'request': request})
         return Response(serializer.data)
 
     # 게시글 수정
