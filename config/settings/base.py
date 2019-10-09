@@ -64,6 +64,7 @@ DJANGO_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django.contrib.admin",
+
 ]
 THIRD_PARTY_APPS = [
     "allauth",
@@ -81,7 +82,8 @@ LOCAL_APPS = [
     "cafeteria.users.apps.UsersConfig",
     # Your stuff: custom apps go here
     "cafeteria.images.apps.ImagesConfig",
-    "cafeteria.notifications.apps.NotificationsConfig"
+    "cafeteria.notifications.apps.NotificationsConfig",
+    "cafeteria.crawler.apps.CrawlerConfig"
 ]
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
@@ -279,7 +281,7 @@ REST_FRAMEWORK = {
 }
 
 JWT_AUTH = {
-    'JWT+VERRIFY_EXPIRATION': False
+    'JWT_VERIFY_EXPIRATION': False,
 }
 REST_USE_JWT = True  # jwt 사용
 ACCOUNT_LOGOUT_ON_GET = True  # rest-auth get 으로 로그아웃 허용

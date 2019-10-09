@@ -26,11 +26,13 @@ class Images(APIView):
             user_models.User.objects.get(id=user.id)
         except user_models.User.DoesNotExist:
             return Response(status=status.HTTP_401_UNAUTHORIZED)
-        serializer = serializers.InputImageSerializer(data=request.data)
+
+        serializer = serializers.ImageSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save(creator=user)
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         else:
+            print(serializer.errors)
             return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

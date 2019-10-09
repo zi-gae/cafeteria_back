@@ -77,14 +77,13 @@ class ImageSerializer(serializers.ModelSerializer):
             'comment_count',
             'natural_time',
             'updated_at',
-            'is_liked'
+            'is_liked',
+            "anonymous"
         )
 
     def get_is_liked(self, obj):
         if 'request' in self.context:
             request = self.context['request']
-            print("context: ", self.context)
-
             try:
                 models.Like.objects.get(creator__id=request.user.id, image__id=obj.id)
                 return True
@@ -101,4 +100,5 @@ class InputImageSerializer(serializers.ModelSerializer):
             'title',
             'file',
             'content',
+            'anonymous',
         )

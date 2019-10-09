@@ -7,6 +7,7 @@ from django.views import defaults as default_views
 from rest_framework_jwt.views import obtain_jwt_token
 from cafeteria import views
 
+
 urlpatterns = [
 
     path("rest-auth/", include('rest_auth.urls')),
@@ -17,6 +18,8 @@ urlpatterns = [
     path("posts/", include("cafeteria.images.urls", namespace="images")),
     path("notifications/", include("cafeteria.notifications.urls", namespace="notifications")),
     path("accounts/", include("allauth.urls")),
+    path("crawler/", include("cafeteria.crawler.urls")),
+
     path("", views.ReactAppView.as_view())
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

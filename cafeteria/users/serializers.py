@@ -6,6 +6,7 @@ from allauth.utils import email_address_exists
 from allauth.account.adapter import get_adapter
 from allauth.account.utils import setup_user_email
 
+
 class RegisterSerializer(serializers.Serializer):
     username = serializers.CharField(
         max_length=100,
@@ -21,7 +22,7 @@ class RegisterSerializer(serializers.Serializer):
         required=allauth_settings.USERNAME_REQUIRED
     )
     email = serializers.EmailField(required=allauth_settings.EMAIL_REQUIRED)
-    
+
     def validate_username(self, username):
         username = get_adapter().clean_username(username)
         return username
@@ -47,7 +48,7 @@ class RegisterSerializer(serializers.Serializer):
 
     def get_cleaned_data(self):
         return {
-            'stdntnum': self.validated_data.get('stdntnum',''),
+            'stdntnum': self.validated_data.get('stdntnum', ''),
             'username': self.validated_data.get('username', ''),
             'password1': self.validated_data.get('password1', ''),
             'name': self.validated_data.get('name', ''),

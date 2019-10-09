@@ -25,6 +25,7 @@ class Image(TimeStampedModel):
     title = models.CharField(max_length=30)
     content = models.TextField(max_length=700)
     creator = models.ForeignKey(user_models.User, on_delete=models.PROTECT, related_name="images")
+    anonymous = models.BooleanField(blank=True, null=True)
 
     @property
     def like_count(self):
