@@ -30,7 +30,10 @@ class FeedUserSerializer(serializers.ModelSerializer):
         model = user_models.User
         fields = (
             "username",
-            "profile_image"
+            "profile_image",
+            "name",
+            "stdntnum",
+            "bio",
         )
 
 
@@ -60,8 +63,8 @@ class LikeSerializer(serializers.ModelSerializer):
 class ImageSerializer(serializers.ModelSerializer):
 
     # foreign key 의 정보를 가져옴
-    comments = CommentSerializer(many=True)
-    creator = FeedUserSerializer()
+    comments = CommentSerializer(many=True, required=False)
+    creator = FeedUserSerializer(required=False)
     is_liked = serializers.SerializerMethodField()
 
     class Meta:

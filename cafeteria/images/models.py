@@ -48,9 +48,9 @@ class Comment(TimeStampedModel):
 
     """ Comment  Model """
     message = models.TextField(max_length=150)
-    creator = models.ForeignKey(user_models.User, on_delete=models.PROTECT, null=True)
-    image = models.ForeignKey(Image, on_delete=models.PROTECT, null=True, related_name='comments')
-    referComment = models.ForeignKey("self", on_delete=models.PROTECT,
+    creator = models.ForeignKey(user_models.User, on_delete=models.CASCADE, null=True)
+    image = models.ForeignKey(Image, on_delete=models.CASCADE, null=True, related_name='comments')
+    referComment = models.ForeignKey("self", on_delete=models.CASCADE,
                                      null=True, blank=True, related_name='commentOnComment')
 
     def natural_time(self):
