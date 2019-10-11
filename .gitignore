@@ -279,12 +279,12 @@ pip-selfcheck.json
 
 ### Project template
 
-instar/media/
+cafeteria/media/
 
 .pytest_cache/
 
-instar/users/migrations/
-instar/notifications/migrations/
-instar/images/migrations/
+cafeteria/users/migrations/
+cafeteria/notifications/migrations/
+cafeteria/images/migrations/
 
 
