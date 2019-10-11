@@ -5,7 +5,34 @@ from datetime import date
 today = date.today()
 
 
+def dor_restaurant():
+
+    dor_req = Request('http://dormitory.tu.ac.kr/default/main/main.jsp')
+    dor_res = urlopen(dor_req)
+    dor_html = dor_res.read().decode("UTF-8")
+    dor_bs = BeautifulSoup(dor_html, 'html.parser')
+    dor_breakfast_tag = dor_bs.select('body > div.container > div.main > div > div.food_order > dl > dd:nth-child(2)')
+    dor_dinner_tag = dor_bs.select('body > div.container > div.main > div > div.food_order > dl > dd.boardSkip')
+
+    breakfast_menu = []
+    dinner_menu = []
+    # 메뉴 없는날
+    if dor_dinner_tag == [] and dor_breakfast_tag == []:
+        return breakfast_menu, dinner_menu
+    # 메뉴 있는날
+    else:
+
+        for breakfast in dor_breakfast_tag:
+            breakfast = breakfast.text.split()
+
+        for dinner in dor_dinner_tag:
+            dinner = dinner.text.split()
+
+        return breakfast, dinner
+
+
 def restaurant():
+
     req = Request("http://tusso.tu.ac.kr/jsp/manage/restaurant/restaurant_menu.jsp")
     res = urlopen(req)
     html = res.read().decode("UTF-8")
@@ -21,8 +48,7 @@ def restaurant():
     faculty_menu = []
 
     if student_tr_tag == [] and faculty_tr_tag == []:
-        message = "식단 메뉴가 없습니다."
-        return message
+        return ddoock, il, rice, noodle, yang, faculty_menu
     else:
         for students in student_tr_tag:
             menu = students.text.split()
@@ -59,10 +85,3 @@ def restaurant():
                 faculty_menu.append(menus)
 
         return ddoock, il, rice, yang, noodle, faculty_menu
-
-
-restaurant()
-# schedule.every().day.at("00:00").do(restaurant)
-#
-# while True:
-#     schedule.run_pending()
