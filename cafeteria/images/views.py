@@ -195,6 +195,22 @@ class ContentSearch(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
+# 내용 제목 검색
+class ContentTitleSearch(APIView):
+
+    def get(self, request, format=None):
+
+        search = request.query_params.get("content", None)
+
+        if search is not None:
+            images = models.Image.objects.filter(content__icontains=search).distinct()
+            serializer = serializers.ImageSerializer(images, many=True)
+            return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
 # 이미지 디테일
 class ImageDetail(APIView):
 
