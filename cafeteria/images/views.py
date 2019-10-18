@@ -203,7 +203,7 @@ class ContentTitleSearch(APIView):
         search = request.query_params.get("content", None)
 
         if search is not None:
-            images = models.Image.objects.filter(content__icontains=search).distinct()
+            images = models.Image.objects.filter(content__icontains=search).filter(content__icontains=search).distinct()
             serializer = serializers.ImageSerializer(images, many=True)
             return Response(data=serializer.data, status=status.HTTP_200_OK)
 

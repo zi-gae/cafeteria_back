@@ -12,7 +12,8 @@ urlpatterns = [
     path("<int:post_id>/comments/<int:comment_id>", views.ModerateComment.as_view(), name="comment_image"),
     path("comments/<int:comment_id>/", views.Comment.as_view(), name="comment_delete"),
     path("title_search/", views.TitleSearch.as_view(), name="title_search"),
-    path("content_search/", views.ContentSearch.as_view(), name="content_search")
+    path("content_search/", views.ContentSearch.as_view(), name="content_search"),
+    path("total_search/", views.ContentTitleSearch.as_view(), name="total_search")
 ]
 
 # my image on comment delete
