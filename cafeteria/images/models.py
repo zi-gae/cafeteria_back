@@ -21,6 +21,14 @@ class Image(TimeStampedModel):
 
     """ Image  conctent Model """
     # json 으로 변경
+
+    TYPE_CHOICES = (
+        ("free", "자유게시판"),
+        ("review", "강의 후기 & 팁"),
+        ("sale", "중고 장터")
+        # 실제 값  ,  보여지는 값
+    )
+    kinds = models.CharField(max_length=120, choices=TYPE_CHOICES, default="free")
     file = models.ImageField(blank=True, null=True)
     title = models.CharField(max_length=30)
     content = models.TextField(max_length=700)

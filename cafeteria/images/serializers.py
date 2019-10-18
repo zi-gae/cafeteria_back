@@ -71,6 +71,7 @@ class ImageSerializer(serializers.ModelSerializer):
         model = models.Image
         fields = (
             'id',
+            'kinds',
             'title',
             'file',
             'content',
