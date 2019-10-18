@@ -102,12 +102,10 @@ class UnLikeImage(APIView):
 class CommentOnImage(APIView):
 
     def post(self, request, post_id, format=None):
-
         try:
             foundImage = models.Image.objects.get(id=post_id)
         except models.Image.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
-
         serializer = serializers.CommentSerializer(data=request.data)
         user = request.user
         if serializer.is_valid():
@@ -121,19 +119,16 @@ class CommentOnImage(APIView):
 
 # 대댓글
 class CommentOnComment(APIView):
-
-    def post(self, request, comment_id, format=None):
+    def post(self, request, post_id, comment_id, format=None):
         try:
-            foundComment = models.Comment.objects.get(id-comment_id)
-        except models.Comment.DoesNotExist:
+            foundImage = models.Image.objects.get(id=post_id)
+            foundComment = models.Comment.objects.get(id=comment_id)
+        except Exception:
             return Response(status=status.HTTP_404_NOT_FOUND)
-
         serializer = serializers.CommentSerializer(data=request.data)
         user = request.user
         if serializer.is_valid():
             serializer.save(creator=user, image=foundImage)
-            notification = notificationView.createNotification(
-                user, foundImage.creator, "comment", foundImage, serializer.data["message"])
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -141,15 +136,15 @@ class CommentOnComment(APIView):
 
 # 게시글 나의 댓글 삭제
 class Comment(APIView):
-
     def delete(self, request, comment_id, format=None):
         user = request.user
+        print(comment_id, user)
         try:
             foundComment = models.Comment.objects.get(id=comment_id, creator=user)
             foundComment.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         except models.Comment.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 # 내 게시글에 달린 댓글 삭제

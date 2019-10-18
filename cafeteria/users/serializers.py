@@ -21,19 +21,11 @@ class RegisterSerializer(serializers.Serializer):
         min_length=allauth_settings.USERNAME_MIN_LENGTH,
         required=allauth_settings.USERNAME_REQUIRED
     )
-    email = serializers.EmailField(required=allauth_settings.EMAIL_REQUIRED)
+    # email = serializers.EmailField(required=allauth_settings.EMAIL_REQUIRED)
 
     def validate_username(self, username):
         username = get_adapter().clean_username(username)
         return username
-
-    def validate_email(self, email):
-        email = get_adapter().clean_email(email)
-        if allauth_settings.UNIQUE_EMAIL:
-            if email and email_address_exists(email):
-                raise serializers.ValidationError(
-                    ("A user is already registered with this e-mail address."))
-        return email
 
     def validate_password1(self, password):
         return get_adapter().clean_password(password)
@@ -52,7 +44,7 @@ class RegisterSerializer(serializers.Serializer):
             'username': self.validated_data.get('username', ''),
             'password1': self.validated_data.get('password1', ''),
             'name': self.validated_data.get('name', ''),
-            'email': self.validated_data.get('email', '')
+            # 'email': self.validated_data.get('email', '')
         }
 
     def save(self, request):
@@ -61,7 +53,7 @@ class RegisterSerializer(serializers.Serializer):
         self.cleaned_data = self.get_cleaned_data()
         adapter.save_user(request, user, self)
         self.custom_signup(request, user)
-        setup_user_email(request, user, [])
+        # setup_user_email(request, user, [])
         return user
 
 
@@ -77,6 +69,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = models.User
 
         fields = (
+            "pk",
             "username",
             "name",
             "bio",

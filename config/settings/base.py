@@ -271,6 +271,11 @@ REST_AUTH_REGISTER_SERIALIZERS = {
     'REGISTER_SERIALIZER': 'cafeteria.users.serializers.RegisterSerializer'
 }
 
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'cafeteria.users.serializers.UserProfileSerializer'
+}
+
+
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -283,6 +288,7 @@ REST_FRAMEWORK = {
 JWT_AUTH = {
     'JWT_VERIFY_EXPIRATION': False,
 }
+
 REST_USE_JWT = True  # jwt 사용
 ACCOUNT_LOGOUT_ON_GET = True  # rest-auth get 으로 로그아웃 허용
 CORS_ORIGIN_ALLOW_ALL을 = True  # 모든 호스트 허용
