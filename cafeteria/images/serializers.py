@@ -8,6 +8,7 @@ class SmallImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Image
         fields = (
+            "id",
             "file",
         )
 
@@ -49,7 +50,8 @@ class CommentSerializer(serializers.ModelSerializer):
             "creator",
             "referComment",
             'natural_time',
-            'updated_at'
+            'updated_at',
+            "anonymous"
         )
 
 
@@ -82,7 +84,7 @@ class ImageSerializer(serializers.ModelSerializer):
             'natural_time',
             'updated_at',
             'is_liked',
-            "anonymous"
+            "anonymous",
         )
 
     def get_is_liked(self, obj):

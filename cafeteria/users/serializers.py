@@ -19,7 +19,7 @@ class RegisterSerializer(serializers.Serializer):
     name = serializers.CharField(
         max_length=100,
         min_length=allauth_settings.USERNAME_MIN_LENGTH,
-        required=allauth_settings.USERNAME_REQUIRED
+        required=allauth_settings.USERNAME_REQUIRED,
     )
     # email = serializers.EmailField(required=allauth_settings.EMAIL_REQUIRED)
 

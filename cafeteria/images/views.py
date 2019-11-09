@@ -6,6 +6,7 @@ from . import serializers
 from cafeteria.notifications import views as notificationView
 from cafeteria.users import models as user_models
 from cafeteria.users import serializers as userSerializers
+from django.db.models import Q
 
 
 class Images(APIView):
@@ -67,14 +68,14 @@ class LikeImage(APIView):
             return Response(status=status.HTTP_304_NOT_MODIFIED)
 
         except models.Like.DoesNotExist:
-
-            createNotification = notificationView.createNotification(user, foundImage.creator, "like", foundImage)
             new_like = models.Like.objects.create(
                 creator=user,
                 image=foundImage
             )
             new_like.save()
-
+            if user.id != foundImage.creator.id:
+                createNotification = notificationView.createNotification(
+                    user, foundImage.creator, "like", foundImage)
             return Response(status=status.HTTP_201_CREATED)
 
 
@@ -110,9 +111,11 @@ class CommentOnImage(APIView):
         user = request.user
         if serializer.is_valid():
             serializer.save(creator=user, image=foundImage)
-            notification = notificationView.createNotification(
-                user, foundImage.creator, "comment", foundImage, serializer.data["message"])
+            if user.id != foundImage.creator.id:
+                notification = notificationView.createNotification(
+                    user, foundImage.creator, "comment", foundImage, serializer.data["message"])
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
         else:
             return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -127,9 +130,14 @@ class CommentOnComment(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         serializer = serializers.CommentSerializer(data=request.data)
         user = request.user
+
         if serializer.is_valid():
             serializer.save(creator=user, image=foundImage)
+            if user.id != foundImage.creator.id:
+                notification = notificationView.createNotification(
+                    user, foundImage.creator, "on_comment", foundImage, serializer.data["message"])
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
         else:
             return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -175,7 +183,7 @@ class TitleSearch(APIView):
         # icontains => 대소문자 구분 안함
         # exact => === 하는걸 찾음
         # distinct => distinct 2개 이상 키워드로 검색 했을때 결과 중복 제거
-        serializer = serializers.ImageSerializer(images, many=True)
+        serializer = serializers.ImageSerializer(images, many=True, context={'request': request})
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
@@ -188,7 +196,7 @@ class ContentSearch(APIView):
 
         if search is not None:
             images = models.Image.objects.filter(content__icontains=search).distinct()
-            serializer = serializers.ImageSerializer(images, many=True)
+            serializer = serializers.ImageSerializer(images, many=True, context={'request': request})
             return Response(data=serializer.data, status=status.HTTP_200_OK)
 
         else:
@@ -200,11 +208,11 @@ class ContentTitleSearch(APIView):
 
     def get(self, request, format=None):
 
-        search = request.query_params.get("content", None)
+        search = request.query_params.get("total", None)
 
         if search is not None:
-            images = models.Image.objects.filter(content__icontains=search).filter(content__icontains=search).distinct()
-            serializer = serializers.ImageSerializer(images, many=True)
+            images = models.Image.objects.filter(Q(title__icontains=search) | Q(content__icontains=search)).distinct()
+            serializer = serializers.ImageSerializer(images, many=True, context={'request': request})
             return Response(data=serializer.data, status=status.HTTP_200_OK)
 
         else:
@@ -237,12 +245,11 @@ class ImageDetail(APIView):
 
     # 게시글 수정
     def put(self, request, post_id, format=None):
-
         user = request.user
-
         image = self.findOwnImage(post_id, user)
-
+        print(request.data)
         serializer = serializers.InputImageSerializer(image, data=request.data, partial=True)
+        print(serializer)
         # partial => update 할때 require=True 이면 기존의 값을 이어 받음
         # require 속성이 True 이고 값을 입력하지 않을때 partial 속성을 주지 않으면 serializer 가 제대로 동작 하지 않음
         if serializer.is_valid():

@@ -30,10 +30,10 @@ class Image(TimeStampedModel):
     )
     kinds = models.CharField(max_length=120, choices=TYPE_CHOICES, default="free")
     file = models.ImageField(blank=True, null=True)
-    title = models.CharField(max_length=30)
-    content = models.TextField(max_length=700)
+    title = models.CharField(max_length=1000)
+    content = models.TextField(max_length=1000)
     creator = models.ForeignKey(user_models.User, on_delete=models.PROTECT, related_name="images")
-    anonymous = models.BooleanField(blank=True, null=True)
+    anonymous = models.BooleanField(blank=True, default=True)
 
     @property
     def like_count(self):
@@ -55,7 +55,9 @@ class Image(TimeStampedModel):
 class Comment(TimeStampedModel):
 
     """ Comment  Model """
-    message = models.TextField(max_length=150)
+    message = models.TextField(max_length=1000)
+    anonymous = models.BooleanField(blank=True, default=True)
+    commentShow = models.BooleanField(blank=True, default=True)
     creator = models.ForeignKey(user_models.User, on_delete=models.CASCADE, null=True)
     image = models.ForeignKey(Image, on_delete=models.CASCADE, null=True, related_name='comments')
     referComment = models.ForeignKey("self", on_delete=models.CASCADE,

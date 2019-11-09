@@ -78,10 +78,10 @@ class UserProfile(APIView):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     # 유저 프로필 수정
-    def put(self, request, username, format=None):
+    def post(self, request, username, format=None):
+        print("reqeust", request.data)
         user = request.user
         foundUser = self.getUser(username)
-
         if user == foundUser:
             serializer = serializers.UserProfileSerializer(foundUser, data=request.data, partial=True)
             if serializer.is_valid():

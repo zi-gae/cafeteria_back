@@ -258,6 +258,39 @@ def get_my_list(self, obj):
 ```
 
 
+## ngrok 으로 외부에서 로컬 호스트 접근
+```python
+ALLOWED_HOSTS = ["*"]
+```
+를 settings.py 에 추가하면 모든 호스트 허용
+또는  `ALLOWED_HOSTS = ["www.myhostname.com"]`
+
+## rest-auth 기본 시리얼 라이저 커스터 마이징 법
+```python
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'cafeteria.users.serializers.RegisterSerializer'
+}
+```
+을 추가하고 RegisterSerializer 를 커스터마이징하면 기본 값 변경가능
+
+
+## JWT
+
+1. 헤더를 base64 로 인코딩한다. => A
+2. 내용(payload) 를 base 64 로 인코딩 한다. => B
+3. A+"."+B 를 HMAC SHA256 방식으로 해싱한다.
+   1. HMAC SHA256 이란 
+      1. 기존의 내용에 비밀키를 합쳐 해싱한 후 나온 값을 다시 한번 비밀키와 해싱하여 나온 값
+      2. sha256 방식은 레인보우테이블에 의해 뚫릴 가능성이 있다
+         1. 레인보우 테이블 => 해싱된 결과를 모아둔 테이블
+4. 이렇게 만든 해쉬를 basse 64로 인코딩 => C
+5. A.B.C => JWT
+
+## postgreSql mac 충돌 에러
+> rm ~/Library/Application\ Support/Postgres/var-11/postmaster.pid 
+
+해당 위치 `postmaster.pid` 삭제 해주면 정상 작동함 
+
 
 
 

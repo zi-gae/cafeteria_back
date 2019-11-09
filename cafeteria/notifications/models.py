@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from cafeteria.images import models as image_models
 from cafeteria.users import models as user_models
+from django.contrib.humanize.templatetags.humanize import naturaltime
 
 
 class Notification(image_models.TimeStampedModel):
@@ -9,7 +10,7 @@ class Notification(image_models.TimeStampedModel):
     TYPE_CHOICES = (
         ("like", "Like"),
         ("comment", "Comment"),
-        ("follow", "Follow")
+        ("on_comment", "onComment")
         # 실제 값  ,  보여지는 값
     )
     creator = models.ForeignKey(user_models.User, on_delete=models.CASCADE, related_name="creator")
@@ -23,3 +24,7 @@ class Notification(image_models.TimeStampedModel):
 
     def __str__(self):
         return "from: {} - to: {}".format(self.creator, self.to)
+
+    @property
+    def natural_time(self):
+        return naturaltime(self.created_at)
