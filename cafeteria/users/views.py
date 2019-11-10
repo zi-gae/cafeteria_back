@@ -5,6 +5,8 @@ from . import models, serializers
 from cafeteria.notifications import views as notification_view
 from allauth.socialaccount.providers.kakao.views import KakaoOAuth2Adapter
 from rest_auth.registration.views import SocialLoginView
+import requests
+import json
 
 
 class ExploreUser(APIView):
@@ -73,17 +75,17 @@ class UserProfile(APIView):
 
         foundUser = self.getUser(username)
 
-        serializer = serializers.UserProfileSerializer(foundUser)
+        serializer = serializers.UserProfileSerializer(foundUser, context={"request": request})
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     # 유저 프로필 수정
-    def post(self, request, username, format=None):
-        print("reqeust", request.data)
+    def put(self, request, username, format=None):
         user = request.user
         foundUser = self.getUser(username)
         if user == foundUser:
-            serializer = serializers.UserProfileSerializer(foundUser, data=request.data, partial=True)
+            serializer = serializers.UserProfileSerializer(
+                foundUser, data=request.data, partial=True, allow_null=True, context={"request": request})
             if serializer.is_valid():
                 serializer.save()
                 return Response(data=serializer.data,  status=status.HTTP_200_OK)
@@ -118,3 +120,39 @@ class ChangePassword(APIView):
 
 class KakaoLogin(SocialLoginView):
     adapter_class = KakaoOAuth2Adapter
+
+
+class PushToken(APIView):
+
+    def getUser(self, username):
+        try:
+            foundUser = models.User.objects.get(username=username)
+            return foundUser
+        except models.User.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def post(self, request, format=None):
+        username = request.user
+        foundUser = self.getUser(username)
+        serializer = serializers.UserPushToken(data=request.data)
+        if username == foundUser:
+            serializer = serializers.UserProfileSerializer(
+                foundUser, data=request.data, partial=True, allow_null=True, context={"request": request})
+            if serializer.is_valid():
+                serializer.save()
+                return Response(data=serializer.data,  status=status.HTTP_200_OK)
+            else:
+                return Response(data=serializer.error, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(data=serializer.error, status=status.HTTP_400_BAD_REQUEST)
+        # payload = {
+        #     "to": request.data['token'],
+        #     "title": "알림",
+        #     "body": "world"
+        # }
+        # url = "https://exp.host/--/api/v2/push/send"
+        # header = {
+        #     "Content-Type": "application/json",
+        # }
+        # requests.post(url, data=json.dumps(payload), headers=header)
+        return Response(status=status.HTTP_200_OK)

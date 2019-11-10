@@ -76,9 +76,8 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "profile_image",
             "stdntnum",
             "postCount",
-            "followersCount",
-            "followingCount",
-            "images"
+            "images",
+            "push_token",
         )
 
 
@@ -90,4 +89,13 @@ class ListUserSerializer(serializers.ModelSerializer):
             "id",
             "username",
             "name"
+        )
+
+
+class UserPushToken(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.User
+        fields = (
+            "push_token",
         )

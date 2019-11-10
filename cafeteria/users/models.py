@@ -12,8 +12,7 @@ class User(AbstractUser):
     name = CharField(_("Name of User"), null=True, max_length=255, blank=True)
     stdntnum = models.IntegerField(null=True, unique=True)
     bio = models.TextField(null=True)
-    followers = models.ManyToManyField("self", blank=True)
-    following = models.ManyToManyField("self", blank=True)
+    push_token = models.TextField(null=True, blank=True, unique=False)
 
     def __str__(self):
         return self.username
