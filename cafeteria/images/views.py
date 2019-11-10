@@ -146,7 +146,6 @@ class CommentOnComment(APIView):
 class Comment(APIView):
     def delete(self, request, comment_id, format=None):
         user = request.user
-        print(comment_id, user)
         try:
             foundComment = models.Comment.objects.get(id=comment_id, creator=user)
             foundComment.delete()
@@ -247,9 +246,7 @@ class ImageDetail(APIView):
     def put(self, request, post_id, format=None):
         user = request.user
         image = self.findOwnImage(post_id, user)
-        print(request.data)
         serializer = serializers.InputImageSerializer(image, data=request.data, partial=True)
-        print(serializer)
         # partial => update 할때 require=True 이면 기존의 값을 이어 받음
         # require 속성이 True 이고 값을 입력하지 않을때 partial 속성을 주지 않으면 serializer 가 제대로 동작 하지 않음
         if serializer.is_valid():

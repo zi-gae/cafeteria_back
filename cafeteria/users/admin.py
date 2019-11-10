@@ -12,7 +12,7 @@ class UserAdmin(auth_admin.UserAdmin):
 
     form = UserChangeForm
     add_form = UserCreationForm
-    fieldsets = (("User", {"fields": ("name", "following", "followers", "profile_image", "bio", "stdntnum")}),) + \
+    fieldsets = (("User", {"fields": ("name", "profile_image", "bio", "stdntnum", "push_token")}),) + \
         auth_admin.UserAdmin.fieldsets
     list_display = ["id", "username", "name", "is_superuser"]
     search_fields = ["name"]
