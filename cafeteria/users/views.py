@@ -83,9 +83,16 @@ class UserProfile(APIView):
     def put(self, request, username, format=None):
         user = request.user
         foundUser = self.getUser(username)
+        if("profile_image" in request.data):
+            if(request.data["profile_image"] == 'null'):
+                data = {'profile_image': None}
+            else:
+                data = request.data
+        else:
+            data = request.data
         if user == foundUser:
             serializer = serializers.UserProfileSerializer(
-                foundUser, data=request.data, partial=True, allow_null=True, context={"request": request})
+                foundUser, data=data, partial=True, context={"request": request})
             if serializer.is_valid():
                 serializer.save()
                 return Response(data=serializer.data,  status=status.HTTP_200_OK)
@@ -145,14 +152,3 @@ class PushToken(APIView):
                 return Response(data=serializer.error, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(data=serializer.error, status=status.HTTP_400_BAD_REQUEST)
-        # payload = {
-        #     "to": request.data['token'],
-        #     "title": "알림",
-        #     "body": "world"
-        # }
-        # url = "https://exp.host/--/api/v2/push/send"
-        # header = {
-        #     "Content-Type": "application/json",
-        # }
-        # requests.post(url, data=json.dumps(payload), headers=header)
-        return Response(status=status.HTTP_200_OK)

@@ -13,6 +13,7 @@ class ImageAdmin(admin.ModelAdmin):
         'title',
         'content',
         'creator',
+        'kinds',
         'created_at',
         'updated_at',
     )

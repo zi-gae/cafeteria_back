@@ -7,6 +7,8 @@ from cafeteria.notifications import views as notificationView
 from cafeteria.users import models as user_models
 from cafeteria.users import serializers as userSerializers
 from django.db.models import Q
+import requests
+import json
 
 
 class Images(APIView):
@@ -41,19 +43,16 @@ class LikeImage(APIView):
 
     # 좋아요 리스트
     def get(self, request, post_id, format=None):
-
         like = models.Like.objects.filter(image__id=post_id)
         likeCreatorIds = like.values('creator_id')
         users = user_models.User.objects.filter(id__in=likeCreatorIds)
         # id__in => id 는 기본적으로 가지고 있고 __in => 주어진 리스트안에 존재하는 자료 검색
-
         serializer = userSerializers.ListUserSerializer(users, many=True)
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     # 좋아요 생성
     def post(self, request, post_id, format=None):
-
         user = request.user
         try:
             foundImage = models.Image.objects.get(id=post_id)
@@ -74,6 +73,20 @@ class LikeImage(APIView):
             )
             new_like.save()
             if user.id != foundImage.creator.id:
+                if(str(type(foundImage.creator.push_token)) == "<class 'str'>"):
+                    payload = {
+                        "to": foundImage.creator.push_token,
+                        "title": "알림",
+                        "sound": "default",
+                        "body": "회원님의 게시글을 좋아합니다."
+                    }
+                    url = "https://exp.host/--/api/v2/push/send"
+                    header = {
+                        "Content-Type": "application/json",
+                    }
+                    requests.post(url, data=json.dumps(payload), headers=header)
+                else:
+                    print("push_token:", foundImage.creator.push_token)
                 createNotification = notificationView.createNotification(
                     user, foundImage.creator, "like", foundImage)
             return Response(status=status.HTTP_201_CREATED)
@@ -112,6 +125,20 @@ class CommentOnImage(APIView):
         if serializer.is_valid():
             serializer.save(creator=user, image=foundImage)
             if user.id != foundImage.creator.id:
+                if(str(type(foundImage.creator.push_token)) == "<class 'str'>"):
+                    payload = {
+                        "to": foundImage.creator.push_token,
+                        "title": "알림",
+                        "sound": "default",
+                        "body": "회원님의 게시글에 새로운 댓글이 달렸어요."
+                    }
+                    url = "https://exp.host/--/api/v2/push/send"
+                    header = {
+                        "Content-Type": "application/json",
+                    }
+                    requests.post(url, data=json.dumps(payload), headers=header)
+                else:
+                    print("push_token:", foundImage.creator.push_token)
                 notification = notificationView.createNotification(
                     user, foundImage.creator, "comment", foundImage, serializer.data["message"])
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
@@ -130,12 +157,25 @@ class CommentOnComment(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
         serializer = serializers.CommentSerializer(data=request.data)
         user = request.user
-
         if serializer.is_valid():
+            if(user != foundComment.creator.username):
+                payload = {
+                    "to": foundComment.creator.push_token,
+                    "title": "알림",
+                    "sound": "default",
+                    "body": "회원님의 댓글에 새로운 대댓글이 달렸어요."
+                }
+                url = "https://exp.host/--/api/v2/push/send"
+                header = {
+                    "Content-Type": "application/json",
+                }
+                requests.post(url, data=json.dumps(payload), headers=header)
+            else:
+                print("push_token:", foundImage.creator.push_token)
             serializer.save(creator=user, image=foundImage)
             if user.id != foundImage.creator.id:
                 notification = notificationView.createNotification(
-                    user, foundImage.creator, "on_comment", foundImage, serializer.data["message"])
+                    user, foundComment.creator, "on_comment", foundImage, serializer.data["message"])
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
         else:
