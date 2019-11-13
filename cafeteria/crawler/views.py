@@ -39,7 +39,7 @@ class OutApply(GenericAPIView):
                     }, status=status.HTTP_200_OK)
                 else:
                     return Response({
-                        "message": "ok",
+                        "message": e,
                     }, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"message": e}, status.HTTP_200_OK)

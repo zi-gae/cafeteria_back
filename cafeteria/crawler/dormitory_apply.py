@@ -1,12 +1,17 @@
 from selenium import webdriver
-from selenium.common.exceptions import UnexpectedAlertPresentException
+from selenium.common.exceptions import UnexpectedAlertPresentException, NoAlertPresentException
 import time
 from datetime import datetime
 from selenium.webdriver.common.alert import Alert
+
 today = datetime.today().day
+year = datetime.today().year
 
 
 def dormitory(uid, upasswd, first, second, apply_text):
+    # chrome_options = webdriver.ChromeOptions()
+    # chrome_options.add_argument('headless')
+    # chrome_options.add_argument("disable-gpu")
     driver = webdriver.Chrome('/Users/user/Library/Caches/Homebrew/downloads/chromedriver')  # 웹브라우저 chrome
     driver.get("http://dormitory.tu.ac.kr/default/main/main.jsp")
     login_bt = driver.find_element_by_xpath('/html/body/div[2]/div[1]/ul[2]/li[2]/a/img')
@@ -30,65 +35,16 @@ def dormitory(uid, upasswd, first, second, apply_text):
         print("외박신청페이지 버튼클릭")
         # ifram으로 전환
         driver.switch_to_frame('iFrameModule')
-        # 조회버튼 클릭
-        print("조회버튼 클릭")
-        lookup_bt = driver.find_element_by_xpath('//*[@id="btnRetrieveStd"]')
-        lookup_bt.click()
-        time.sleep(1)
-        # 외박신청 일자 선택
         print("외박신청 일자 선택")
-        apply = driver.find_element_by_name('txtSTAYOUT_REQ_FR_DT')
-        apply.click()
-        time.sleep(1)
-        if first < str(today):
-            next_month = driver.find_element_by_xpath('//*[@id="ui-datepicker-div"]/div/a[2]')
-            next_month.click()
-            time.sleep(1)
-            first_day = driver.find_element_by_xpath('//*[text() = ' + first + ']')  # text 추출
-            first_day.click()
-            time.sleep(1)
-            apply = driver.find_element_by_xpath('//*[@id="txtSTAYOUT_REQ_TO_DT"]')
-            apply.click()
-            time.sleep(1)
-            next_month = driver.find_element_by_xpath('//*[@id="ui-datepicker-div"]/div/a[2]/span')
-            next_month.click()
-            time.sleep(1)
-            second_day = driver.find_element_by_xpath('//*[text() = ' + second + ']')  # text 추출
-            second_day.click()
-            time.sleep(1)
-
-        elif first < second:
-            print("첫번째 외박일 선택")
-            first_day = driver.find_element_by_xpath('//*[text() = ' + first + ']')  # text 추출
-            first_day.click()
-            time.sleep(1)
-            apply = driver.find_element_by_xpath('//*[@id="txtSTAYOUT_REQ_TO_DT"]')
-            apply.click()
-            time.sleep(1)
-            print("두번째 외박인 선택")
-            second_day = driver.find_element_by_xpath('//*[text() = ' + second + ']')  # text 추출
-            second_day.click()
-        else:
-            first_day = driver.find_element_by_xpath('//*[text() = ' + first + ']')  # text 추출
-            first_day.click()
-            time.sleep(1)
-
-            print("첫번째 외박일 선택")
-            apply = driver.find_element_by_xpath('//*[@id="txtSTAYOUT_REQ_TO_DT"]')
-            apply.click()
-            time.sleep(1)
-            next_month = driver.find_element_by_xpath('//*[@id="ui-datepicker-div"]/div/a[2]/span')
-            next_month.click()
-            time.sleep(1)
-
-            second_day = driver.find_element_by_xpath('//*[text() = ' + second + ']')  # text 추출
-            second_day.click()
-            time.sleep(1)
-
+        first_apply = driver.find_element_by_xpath('//*[@id="txtSTAYOUT_REQ_FR_DT"]')
+        driver.execute_script('arguments[0].removeAttribute("readonly")', first_apply)
+        first_day = first_apply.send_keys(first)
+        sec_apply = driver.find_element_by_xpath('//*[@id="txtSTAYOUT_REQ_TO_DT"]')
+        driver.execute_script('arguments[0].removeAttribute("readonly")', sec_apply)
+        sec_day = sec_apply.send_keys(second)
         # 외박사유 입력
         text = driver.find_element_by_name('txtBIGO')
         text.send_keys(apply_text)
-        print("dormitory out reason")
         # 외박신청 버튼 클릭
         out_apply_submit = driver.find_element_by_name('btnSave')
         out_apply_submit.click()
@@ -100,7 +56,9 @@ def dormitory(uid, upasswd, first, second, apply_text):
 
     except UnexpectedAlertPresentException as e:
         return e.alert_text
+    except NoAlertPresentException as e:
+        return e.msg
 
     finally:
-        driver.quit()
+        # driver.quit()
         print("드라이브 종료")
