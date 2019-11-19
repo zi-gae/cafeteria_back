@@ -15,13 +15,13 @@ class RegisterSerializer(serializers.Serializer):
     )
     password1 = serializers.CharField(write_only=True)
     password2 = serializers.CharField(write_only=True)
-    stdntnum = serializers.IntegerField(write_only=True)
-    name = serializers.CharField(
-        max_length=100,
-        min_length=allauth_settings.USERNAME_MIN_LENGTH,
-        required=allauth_settings.USERNAME_REQUIRED,
-    )
-    # email = serializers.EmailField(required=allauth_settings.EMAIL_REQUIRED)
+    # stdntnum = serializers.IntegerField(write_only=True)
+    # name = serializers.CharField(
+    #     max_length=100,
+    #     min_length=allauth_settings.USERNAME_MIN_LENGTH,
+    #     required=allauth_settings.USERNAME_REQUIRED,
+    # )
+    email = serializers.EmailField(required=allauth_settings.EMAIL_REQUIRED)
 
     def validate_username(self, username):
         username = get_adapter().clean_username(username)
@@ -78,6 +78,7 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "postCount",
             "images",
             "push_token",
+            "univ_authentication"
         )
 
 

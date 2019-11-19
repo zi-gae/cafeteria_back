@@ -60,5 +60,5 @@ def dormitory(uid, upasswd, first, second, apply_text):
         return e.msg
 
     finally:
-        # driver.quit()
+        driver.quit()
         print("드라이브 종료")

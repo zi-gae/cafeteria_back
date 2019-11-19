@@ -137,8 +137,7 @@ class CommentOnImage(APIView):
                         "Content-Type": "application/json",
                     }
                     requests.post(url, data=json.dumps(payload), headers=header)
-                else:
-                    print("push_token:", foundImage.creator.push_token)
+
                 notification = notificationView.createNotification(
                     user, foundImage.creator, "comment", foundImage, serializer.data["message"])
             return Response(data=serializer.data, status=status.HTTP_201_CREATED)
@@ -170,8 +169,7 @@ class CommentOnComment(APIView):
                     "Content-Type": "application/json",
                 }
                 requests.post(url, data=json.dumps(payload), headers=header)
-            else:
-                print("push_token:", foundImage.creator.push_token)
+
             serializer.save(creator=user, image=foundImage)
             if user.id != foundImage.creator.id:
                 notification = notificationView.createNotification(

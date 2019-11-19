@@ -2,6 +2,9 @@ from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from cafeteria.users import models as user_models
 from django.contrib.humanize.templatetags.humanize import naturaltime
+from django.db import models
+from imagekit.models import ProcessedImageField
+from imagekit.processors import Thumbnail
 
 
 @python_2_unicode_compatible
@@ -29,7 +32,9 @@ class Image(TimeStampedModel):
         # 실제 값  ,  보여지는 값
     )
     kinds = models.CharField(max_length=120, choices=TYPE_CHOICES, default="free")
-    file = models.ImageField(blank=True, null=True)
+    file = ProcessedImageField(
+        format='JPEG',
+        options={'quality': 30}, null=True, blank=True)
     title = models.CharField(max_length=1000)
     content = models.TextField(max_length=1000)
     creator = models.ForeignKey(user_models.User, on_delete=models.PROTECT, related_name="images")

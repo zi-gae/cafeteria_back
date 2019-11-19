@@ -12,7 +12,6 @@ import json
 class ExploreUser(APIView):
 
     def get(self, request, format=None):
-
         lastFive = models.User.objects.all().order_by('-date_joined')[:5]
         serializer = serializers.ListUserSerializer(lastFive, many=True)
 
@@ -22,7 +21,6 @@ class ExploreUser(APIView):
 class FollowUser(APIView):
 
     def post(self, request, user_id, format=None):
-
         user = request.user
 
         try:
@@ -44,7 +42,6 @@ class FollowUser(APIView):
 class UnFollowUser(APIView):
 
     def post(self, request, user_id, format=None):
-
         user = request.user
 
         try:
@@ -72,7 +69,6 @@ class UserProfile(APIView):
 
     # 유저 프로필 보기
     def get(self, request, username, format=None):
-
         foundUser = self.getUser(username)
 
         serializer = serializers.UserProfileSerializer(foundUser, context={"request": request})
@@ -107,7 +103,6 @@ class ChangePassword(APIView):
 
     # 패스워드 변경
     def put(self, request, username, format=None):
-
         user = request.user
         if user.username == username:
             currentPassword = request.data.get('currentPassword', None)
@@ -152,3 +147,33 @@ class PushToken(APIView):
                 return Response(data=serializer.error, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(data=serializer.error, status=status.HTTP_400_BAD_REQUEST)
+
+
+class IsAlreadyId(APIView):
+
+    def get(self, request, username, format=None):
+        try:
+            foundID = models.User.objects.get(username=username)
+            return Response(status=status.HTTP_302_FOUND)
+        except models.User.DoesNotExist:
+            return Response(status=status.HTTP_202_ACCEPTED)
+
+
+class IsAlreadyName(APIView):
+
+    def get(self, request, name, format=None):
+        try:
+            foundNickname = models.User.objects.get(name=name)
+            return Response(status=status.HTTP_302_FOUND)
+        except models.User.DoesNotExist:
+            return Response(status=status.HTTP_202_ACCEPTED)
+
+
+class IsAlreadyEmail(APIView):
+
+    def get(self, request, email, format=None):
+        try:
+            foundEmail = models.User.objects.get(email=email)
+            return Response(status=status.HTTP_302_FOUND)
+        except models.User.DoesNotExist:
+            return Response(status=status.HTTP_202_ACCEPTED)

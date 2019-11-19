@@ -15,12 +15,8 @@ class CustomUserAccountAdapter(DefaultAccountAdapter):
         """
         from allauth.account.utils import user_field
         user = super().save_user(request, user, form, False)
-        user_field(user, 'stdntnum', request.data.get('stdntnum', ''))
+        # user_field(user, 'stdntnum', request.data.get('stdntnum', ''))
         user_field(user, 'email', request.data.get('email', ''))
-        user_field(user, 'name', request.data.get('name',''))
+        # user_field(user, 'name', request.data.get('name', ''))
         user.save()
         return user
-
-class SocialAccountAdapter(DefaultSocialAccountAdapter):
-    def is_open_for_signup(self, request: HttpRequest, sociallogin: Any):
-        return getattr(settings, "ACCOUNT_ALLOW_REGISTRATION", True)
