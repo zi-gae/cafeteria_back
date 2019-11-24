@@ -35,9 +35,9 @@ class Image(TimeStampedModel):
     file = ProcessedImageField(
         format='JPEG',
         options={'quality': 30}, null=True, blank=True)
-    title = models.CharField(max_length=1000)
-    content = models.TextField(max_length=1000)
-    creator = models.ForeignKey(user_models.User, on_delete=models.PROTECT, related_name="images")
+    title = models.CharField(max_length=1000, null=True, blank=True)
+    content = models.TextField(max_length=1000, null=True, blank=True)
+    creator = models.ForeignKey(user_models.User, on_delete=models.CASCADE, related_name="images")
     anonymous = models.BooleanField(blank=True, default=True)
 
     @property

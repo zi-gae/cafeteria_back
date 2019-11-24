@@ -177,3 +177,27 @@ class IsAlreadyEmail(APIView):
             return Response(status=status.HTTP_302_FOUND)
         except models.User.DoesNotExist:
             return Response(status=status.HTTP_202_ACCEPTED)
+
+
+class StudentAuthentication(APIView):
+
+    def getUser(self, username):
+        try:
+            foundUser = models.User.objects.get(username=username)
+            return foundUser
+        except models.User.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+    def put(self, request, format=None):
+        username = request.user
+        foundUser = self.getUser(username)
+        if username == foundUser:
+            serializer = serializers.UserAuthentication(
+                foundUser, data=request.data, partial=True, context={"request": request})
+            if serializer.is_valid():
+                serializer.save()
+                return Response(data=serializer.data,  status=status.HTTP_200_OK)
+            else:
+                return Response(data=serializer.error, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(data=serializer.error, status=status.HTTP_400_BAD_REQUEST)

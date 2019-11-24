@@ -1,6 +1,6 @@
 from .base import *  # noqa
 from .base import env
-
+from base_settings.py import *
 # GENERAL
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key

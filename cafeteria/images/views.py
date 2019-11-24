@@ -157,7 +157,7 @@ class CommentOnComment(APIView):
         serializer = serializers.CommentSerializer(data=request.data)
         user = request.user
         if serializer.is_valid():
-            if(user != foundComment.creator.username):
+            if user.username != foundComment.creator.username:
                 payload = {
                     "to": foundComment.creator.push_token,
                     "title": "알림",

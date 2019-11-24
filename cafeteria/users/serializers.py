@@ -100,3 +100,13 @@ class UserPushToken(serializers.ModelSerializer):
         fields = (
             "push_token",
         )
+
+
+class UserAuthentication(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.User
+        fields = (
+            "student_card",
+            "univ_authentication"
+        )
