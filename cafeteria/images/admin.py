@@ -9,19 +9,18 @@ class ImageAdmin(admin.ModelAdmin):
     # 어드민 패널 시작할때 보일 리스트 설정 하는 펑션
     list_display = (
         'id',
-        'file',
         'title',
-        'content',
         'creator',
         'kinds',
+        'report_count',
         'created_at',
         'updated_at',
     )
 
     # 눌렀을때 해당 링크로 가지 않고 수정창으로 감
     list_display_links = (
+        'id',
         'title',
-        'content',
         'creator',
     )
 
@@ -53,4 +52,14 @@ class CommentAdmin(admin.ModelAdmin):
     )
     list_display_links = (
         'message',
+    )
+
+
+@admin.register(models.CrimeRepoter)
+class CrimeRepotAdmin(admin.ModelAdmin):
+    list_display = (
+        'creator',
+        'image',
+        'created_at',
+        'updated_at',
     )

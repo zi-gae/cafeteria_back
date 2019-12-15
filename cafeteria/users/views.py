@@ -193,7 +193,7 @@ class StudentAuthentication(APIView):
         foundUser = self.getUser(username)
         if username == foundUser:
             serializer = serializers.UserAuthentication(
-                foundUser, data=request.data, partial=True, context={"request": request})
+                foundUser, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
                 return Response(data=serializer.data,  status=status.HTTP_200_OK)

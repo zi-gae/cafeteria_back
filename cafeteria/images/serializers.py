@@ -34,7 +34,6 @@ class FeedUserSerializer(serializers.ModelSerializer):
             "profile_image",
             "name",
             "stdntnum",
-            "bio",
         )
 
 

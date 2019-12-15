@@ -16,7 +16,6 @@ class User(AbstractUser):
         options={'quality': 60}, null=True, blank=True)
     name = CharField(_("Name of User"), null=True, max_length=255, blank=True, unique=True)
     stdntnum = models.IntegerField(null=True, blank=True, unique=True)
-    bio = models.TextField(null=True)
     push_token = models.TextField(null=True, blank=True, unique=False)
     student_card = models.ImageField(blank=True, null=True)
     univ_authentication = models.BooleanField(default=False)

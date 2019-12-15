@@ -72,7 +72,6 @@ class UserProfileSerializer(serializers.ModelSerializer):
             "pk",
             "username",
             "name",
-            "bio",
             "profile_image",
             "stdntnum",
             "postCount",
@@ -108,5 +107,5 @@ class UserAuthentication(serializers.ModelSerializer):
         model = models.User
         fields = (
             "student_card",
-            "univ_authentication"
+            "stdntnum"
         )

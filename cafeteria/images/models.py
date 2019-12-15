@@ -49,6 +49,10 @@ class Image(TimeStampedModel):
         return self.comments.all().count()
 
     @property
+    def report_count(self):
+        return self.report.all().count()
+
+    @property
     def natural_time(self):
         return naturaltime(self.created_at)
 
@@ -80,7 +84,20 @@ class Like(TimeStampedModel):
 
     """ Like Model """
     creator = models.ForeignKey(user_models.User, on_delete=models.PROTECT, null=True)
-    image = models.ForeignKey(Image, on_delete=models.SET_NULL, null=True, related_name='likes')
+    image = models.ForeignKey(Image, on_delete=models.CASCADE, null=True, related_name='likes')
+
+    def __str__(self):
+        return 'user:{} - image:{}'.format(self.creator.username, self.image.content)
+
+    class Meta:
+        ordering = ['-created_at']
+
+
+@python_2_unicode_compatible
+class CrimeRepoter(TimeStampedModel):
+
+    creator = models.ForeignKey(user_models.User, on_delete=models.PROTECT, null=True)
+    image = models.ForeignKey(Image, on_delete=models.CASCADE, null=True, related_name='report')
 
     def __str__(self):
         return 'user:{} - image:{}'.format(self.creator.username, self.image.content)

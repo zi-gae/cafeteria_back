@@ -304,3 +304,28 @@ class ImageDetail(APIView):
         else:
             image.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+# 게시글 신고
+class CrimeReport(APIView):
+    def post(self, request, post_id, format=None):
+        user = request.user
+        try:
+            foundImage = models.Image.objects.get(id=post_id)
+        except models.Image.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        try:
+            preExistingReport = models.CrimeRepoter.objects.get(
+                creator=user,
+                image=foundImage
+            )
+            return Response(status=status.HTTP_304_NOT_MODIFIED)
+
+        except models.CrimeRepoter.DoesNotExist:
+            new_report = models.CrimeRepoter.objects.create(
+                creator=user,
+                image=foundImage
+            )
+            new_report.save()
+            return Response(status=status.HTTP_201_CREATED)
