@@ -20,6 +20,9 @@ class User(AbstractUser):
     student_card = models.ImageField(blank=True, null=True)
     univ_authentication = models.BooleanField(default=False)
 
+    class Meta:
+        ordering = ['pk']
+
     def __str__(self):
         return self.username
 
