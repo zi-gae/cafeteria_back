@@ -191,11 +191,23 @@ class StudentAuthentication(APIView):
     def put(self, request, format=None):
         username = request.user
         foundUser = self.getUser(username)
+        foundAdmin = self.getUser("admin")
         if username == foundUser:
             serializer = serializers.UserAuthentication(
                 foundUser, data=request.data, partial=True)
             if serializer.is_valid():
                 serializer.save()
+                payload = {
+                    "to": foundAdmin.push_token,
+                    "title": "알림",
+                    "sound": "default",
+                    "body": "재학생 인증 요청이 왔습니다."
+                }
+                url = "https://exp.host/--/api/v2/push/send"
+                header = {
+                    "Content-Type": "application/json",
+                }
+                requests.post(url, data=json.dumps(payload), headers=header)
                 return Response(data=serializer.data,  status=status.HTTP_200_OK)
             else:
                 return Response(data=serializer.error, status=status.HTTP_400_BAD_REQUEST)
