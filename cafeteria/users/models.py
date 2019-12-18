@@ -6,10 +6,9 @@ from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from imagekit.models import ProcessedImageField
 from imagekit.processors import Thumbnail
-from cafeteria.images import models as image_model
 
 
-class User(AbstractUser, image_model.TimeStampedModel):
+class User(AbstractUser):
     """ Users Models """
     profile_image = ProcessedImageField(
         processors=[Thumbnail(100, 100)],
@@ -20,6 +19,9 @@ class User(AbstractUser, image_model.TimeStampedModel):
     push_token = models.TextField(null=True, blank=True, unique=False)
     student_card = models.ImageField(blank=True, null=True)
     univ_authentication = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['pk']
 
     def __str__(self):
         return self.username
@@ -35,6 +37,3 @@ class User(AbstractUser, image_model.TimeStampedModel):
     @property
     def followingCount(self):
         return self.following.all().count()
-
-    class Meta:
-        ordering = ['-created_at']
